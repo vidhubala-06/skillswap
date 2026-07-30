@@ -1,0 +1,20 @@
+const express = require('express');
+const router = express.Router();
+const { requireAuth } = require('../../middleware/auth.middleware');
+const { sendRequest, listReceived, listSent, listCompleted, listFullHistory, acceptRequest, rejectRequestHandler, cancelRequestHandler } = require('./swapRequests.controller');
+const { loadSwap, schedule, markCompleteHandler, history, getMeetingRoom } = require('./activeSwap.controller');
+
+router.post('/', requireAuth, sendRequest);
+router.get('/received', requireAuth, listReceived);
+router.get('/sent', requireAuth, listSent);
+router.get('/completed', requireAuth, listCompleted);
+router.get('/history', requireAuth, listFullHistory);
+router.post('/:id/accept', requireAuth, acceptRequest);
+router.post('/:id/reject', requireAuth, rejectRequestHandler);
+router.post('/:id/cancel', requireAuth, cancelRequestHandler);
+router.get('/:id', requireAuth, loadSwap);
+router.post('/:id/schedule', requireAuth, schedule);
+router.post('/:id/mark-complete', requireAuth, markCompleteHandler);
+router.get('/:id/history', requireAuth, history);
+router.get('/:id/meeting-room', requireAuth, getMeetingRoom);
+module.exports = router;
