@@ -103,21 +103,24 @@ function Feed() {
 
     return (
         <Layout>
-            <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold text-gray-800">Project Feed</h1>
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    <h1 className="font-display text-2xl font-semibold text-ink">Project feed</h1>
+                    <p className="text-sm text-[#6B6E76] mt-1">See what others have built with skills learned through SkillSwap.</p>
+                </div>
                 <button
                     onClick={() => eligible ? setShowModal(true) : alert('Complete at least one swap to share a project.')}
-                    className={`px-4 py-2 rounded font-medium text-sm ${eligible ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-200 text-gray-400'
+                    className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${eligible ? 'bg-teal-brand text-white hover:bg-teal-brand/90' : 'bg-[#F1EFE8] text-[#9A9890]'
                         }`}
                 >
-                    + Share Project
+                    + Share project
                 </button>
             </div>
 
             <select
                 value={selectedSkillId}
                 onChange={(e) => handleFilterChange(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-2 mb-4 text-sm"
+                className="border border-[#D8D6CC] rounded-lg px-3 py-2 mb-6 mt-4 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
             >
                 <option value="">All Technologies</option>
                 {skills.map((s) => (
@@ -128,21 +131,24 @@ function Feed() {
             {newPostsAvailable && (
               <button
                 onClick={handleRefreshClick}
-                className="w-full bg-blue-50 text-blue-700 text-sm py-2 rounded mb-4 hover:bg-blue-100"
+                className="w-full bg-teal-bg text-teal-text text-sm py-2.5 rounded-lg mb-4 hover:bg-teal-brand/20 font-medium transition-colors"
               >
-                ⬆️ New posts available — click to refresh
+                New posts available — click to refresh
               </button>
             )}
 
             {loading ? (
-                <p className="text-gray-500">Loading feed...</p>
+                <p className="text-[#9A9890] text-sm">Loading feed...</p>
             ) : projects.length === 0 ? (
-                <p className="text-gray-500 text-sm">No projects yet.</p>
+                <div className="bg-white border border-[#E7E5DD] rounded-xl p-10 text-center">
+                    <p className="text-sm text-[#6B6E76]">No projects yet.</p>
+                    <p className="text-xs text-[#9A9890] mt-1">Be the first to share what you've built.</p>
+                </div>
             ) : (
                 <div>
                     {projects.map((p) => <ProjectCard key={p.id} project={p} />)}
-                    {loadingMore && <p className="text-center text-sm text-gray-400">Loading more...</p>}
-                    {!hasMore && <p className="text-center text-xs text-gray-300">You've reached the end</p>}
+                    {loadingMore && <p className="text-center text-sm text-[#9A9890]">Loading more...</p>}
+                    {!hasMore && <p className="text-center text-xs text-[#B4B2A9]">You've reached the end</p>}
                 </div>
             )}
 

@@ -21,16 +21,21 @@ function ProjectCard({ project, showPoster = true }) {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg p-5 mb-4">
+        <div className="bg-white border border-[#E7E5DD] rounded-xl p-5 mb-4">
             {showPoster && (
-                <button
-                    onClick={() => navigate(`/feed/user/${project.userId}`)}
-                    className="font-medium text-gray-800 hover:text-blue-600 hover:underline"
-                >
-                    {project.posterName}
-                </button>
+                <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-teal-bg text-teal-text font-display font-semibold text-sm flex items-center justify-center flex-shrink-0">
+                        {project.posterName.charAt(0).toUpperCase()}
+                    </div>
+                    <button
+                        onClick={() => navigate(`/feed/user/${project.userId}`)}
+                        className="font-medium text-ink hover:text-teal-text transition-colors text-sm"
+                    >
+                        {project.posterName}
+                    </button>
+                </div>
             )}
-            <p className="text-sm text-gray-600 mt-2 whitespace-pre-wrap">{project.description}</p>
+            <p className="text-sm text-[#3D3D3A] whitespace-pre-wrap leading-relaxed">{project.description}</p>
 
             {project.images && project.images.length > 0 && (
               <div className="mt-3">
@@ -43,7 +48,7 @@ function ProjectCard({ project, showPoster = true }) {
                 {project.images.length > 2 && !showAllImages && (
                   <button
                     onClick={() => setShowAllImages(true)}
-                    className="text-xs text-blue-600 hover:underline mt-2"
+                    className="text-xs text-teal-text font-medium hover:underline mt-2"
                   >
                     View {project.images.length - 2} more image{project.images.length - 2 > 1 ? 's' : ''}
                   </button>
@@ -52,7 +57,7 @@ function ProjectCard({ project, showPoster = true }) {
                 {showAllImages && project.images.length > 2 && (
                   <button
                     onClick={() => setShowAllImages(false)}
-                    className="text-xs text-gray-500 hover:underline mt-2"
+                    className="text-xs text-[#9A9890] hover:underline mt-2"
                   >
                     Show less
                   </button>
@@ -61,24 +66,24 @@ function ProjectCard({ project, showPoster = true }) {
             )}
 
             {project.repoUrl && (
-                <a href={project.repoUrl} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:underline mt-3 inline-block">
-                    🔗 View Repo
+                <a href={project.repoUrl} target="_blank" rel="noreferrer" className="text-sm text-teal-text font-medium hover:underline mt-3 inline-flex items-center gap-1">
+                    View repo →
                 </a>
             )}
 
             {project.technologies && project.technologies.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3">
                     {project.technologies.map((t) => (
-                        <span key={t.id} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{t.name}</span>
+                        <span key={t.id} className="font-tag text-xs bg-[#F1EFE8] text-[#5F5E5A] px-2 py-1 rounded-lg">{t.name}</span>
                     ))}
                 </div>
             )}
 
-            <p className="text-xs text-gray-400 mt-3">{project.createdAt?.split('T')[0]}</p>
+            <p className="text-xs text-[#9A9890] mt-3">{project.createdAt?.split('T')[0]}</p>
 
-            <div className="mt-3 pt-2 border-t border-gray-100">
-              {reportMsg && <p className="text-xs text-gray-500 mb-1">{reportMsg}</p>}
-              <button onClick={() => setShowReport(!showReport)} className="text-xs text-gray-400 hover:text-red-500">
+            <div className="mt-3 pt-3 border-t border-[#E7E5DD]">
+              {reportMsg && <p className="text-xs text-[#9A9890] mb-1">{reportMsg}</p>}
+              <button onClick={() => setShowReport(!showReport)} className="text-xs text-[#B4B2A9] hover:text-[#993C1D] transition-colors">
                 Report
               </button>
               {showReport && (

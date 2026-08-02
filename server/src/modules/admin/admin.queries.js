@@ -175,9 +175,41 @@ async function dismissProjectReport(id) {
   await pool.query(`UPDATE project_reports SET status = 'dismissed' WHERE id = ?`, [id]);
 }
 
+async function getRecentSignups(limit = 5) {
+  const [rows] = await pool.query(
+    `SELECT u.id, u.email, u.created_at AS createdAt, p.name
+     FROM users u
+     LEFT JOIN profiles p ON p.user_id = u.id
+     WHERE u.role = 'user'
+     ORDER BY u.created_at DESC
+     LIMIT ?`,
+    [limit]
+  );
+  return rows;
+}
+
+async function getRecentCompletedSwapsAdmin(limit = 5) {
+  const [rows] = await pool.query(
+    `SELECT sr.id, sr.completed_at AS completedAt,
+            requester.name AS requesterName, recipient.name AS recipientName,
+            os.name AS offeredSkillName, ws.name AS wantedSkillName
+     FROM swap_requests sr
+     JOIN profiles requester ON requester.user_id = sr.requester_id
+     JOIN profiles recipient ON recipient.user_id = sr.recipient_id
+     JOIN skills os ON os.id = sr.offered_skill_id
+     JOIN skills ws ON ws.id = sr.wanted_skill_id
+     WHERE sr.status = 'completed'
+     ORDER BY sr.completed_at DESC
+     LIMIT ?`,
+    [limit]
+  );
+  return rows;
+}
+
 module.exports = { 
   getDashboardStats, getPendingSuggestions, createSkillDirect, 
   markSuggestionHandled, dismissSuggestion, getAllSkills, getUsersList,
   getUserDetail, getAllProjectsForAdmin, deleteProjectAdmin,
-  getPendingProjectReports, dismissProjectReport
+  getPendingProjectReports, dismissProjectReport,
+  getRecentSignups, getRecentCompletedSwapsAdmin
 };

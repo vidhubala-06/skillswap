@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import AuthLayout from '../components/AuthLayout';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -43,52 +44,53 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Log In</h1>
+<AuthLayout>
+  <div className="bg-white p-8 rounded-xl border border-[#E7E5DD]">
+    <h1 className="font-display text-2xl font-semibold text-ink mb-1">Welcome back</h1>
+    <p className="text-sm text-[#6B6E76] mb-6">Log in to continue swapping skills.</p>
 
-        {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>
-        )}
+    {error && (
+      <div className="bg-[#FCEBEB] text-[#791F1F] p-3 rounded-lg mb-4 text-sm">{error}</div>
+    )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="text-right">
-            <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Logging in...' : 'Log In'}
-          </button>
-        </form>
-
-        <p className="text-sm text-gray-600 text-center mt-4">
-          Don't have an account? <a href="/signup" className="text-blue-600 hover:underline">Sign up</a>
-        </p>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-ink mb-1">Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
+        />
       </div>
-    </div>
+      <div>
+        <label className="block text-sm font-medium text-ink mb-1">Password</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
+        />
+      </div>
+      <div className="text-right">
+        <a href="/forgot-password" className="text-sm text-teal-text hover:underline">Forgot password?</a>
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-teal-brand text-white py-2.5 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
+      >
+        {loading ? 'Logging in...' : 'Log in'}
+      </button>
+    </form>
+
+    <p className="text-sm text-[#6B6E76] text-center mt-5">
+      Don't have an account? <a href="/signup" className="text-teal-text font-medium hover:underline">Sign up</a>
+    </p>
+  </div>
+</AuthLayout>
   );
 }
 

@@ -72,68 +72,68 @@ function ManageSkills() {
 
     return (
         <AdminLayout>
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Skills</h1>
+            <h1 className="font-display text-2xl font-semibold text-ink mb-6">Manage skills</h1>
 
-            <div className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
-                <h2 className="font-semibold text-gray-700 mb-3">Add a Skill</h2>
-                {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-3 text-sm">{error}</div>}
-                {message && <div className="bg-green-100 text-green-700 p-2 rounded mb-3 text-sm">{message}</div>}
-                <form onSubmit={handleAddSkill} className="flex gap-3">
-                    <input
-                        type="text"
-                        value={newSkillName}
-                        onChange={(e) => setNewSkillName(e.target.value)}
-                        placeholder="Skill name..."
-                        required
-                        className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
-                        type="submit"
-                        disabled={submitting}
-                        className="bg-blue-600 text-white px-5 py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
-                    >
-                        {submitting ? 'Adding...' : 'Add Skill'}
-                    </button>
-                </form>
+            <div className="bg-white border border-[#E7E5DD] rounded-xl p-5 mb-6">
+              <h2 className="font-display text-base font-semibold text-ink mb-3">Add a skill</h2>
+              {error && <div className="bg-[#FCEBEB] text-[#791F1F] p-2 rounded-lg mb-3 text-sm">{error}</div>}
+              {message && <div className="bg-teal-bg text-teal-text p-2 rounded-lg mb-3 text-sm">{message}</div>}
+              <form onSubmit={handleAddSkill} className="flex gap-3">
+                <input
+                  type="text"
+                  value={newSkillName}
+                  onChange={(e) => setNewSkillName(e.target.value)}
+                  placeholder="Skill name..."
+                  required
+                  className="flex-1 border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
+                />
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-teal-brand text-white px-5 py-2 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
+                >
+                  {submitting ? 'Adding...' : 'Add skill'}
+                </button>
+              </form>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
-                <h2 className="font-semibold text-gray-700 mb-3">Pending Suggestions ({suggestions.length})</h2>
-                {suggestions.length === 0 ? (
-                    <p className="text-sm text-gray-500">No pending suggestions.</p>
-                ) : (
-                    <div className="space-y-2">
-                        {suggestions.map((s) => (
-                            <div key={s.id} className="flex items-center justify-between border border-gray-100 rounded p-3">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-800">
-                                        {s.suggestedName} <span className="text-xs text-gray-400">×{s.requestCount}</span>
-                                    </p>
-                                    <p className="text-xs text-gray-500">Submitted by {s.submittedByName}</p>
-                                </div>
-                                <div className="flex gap-2">
-                                    <button onClick={() => handleUseSuggestion(s)} className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-100">
-                                        Use this suggestion
-                                    </button>
-                                    <button onClick={() => handleDismiss(s.id)} className="text-xs bg-gray-50 text-gray-500 px-3 py-1.5 rounded hover:bg-gray-100">
-                                        Dismiss
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+            <div className="bg-white border border-[#E7E5DD] rounded-xl p-5 mb-6">
+              <h2 className="font-display text-base font-semibold text-ink mb-3">Pending suggestions ({suggestions.length})</h2>
+              {suggestions.length === 0 ? (
+                <p className="text-sm text-[#9A9890]">No pending suggestions.</p>
+              ) : (
+                <div className="space-y-2">
+                  {suggestions.map((s) => (
+                    <div key={s.id} className="flex items-center justify-between border border-[#F1EFE8] rounded-lg p-3">
+                      <div>
+                        <p className="text-sm font-medium text-ink font-tag">
+                          {s.suggestedName} <span className="text-xs text-[#9A9890] font-sans">×{s.requestCount}</span>
+                        </p>
+                        <p className="text-xs text-[#9A9890]">Submitted by {s.submittedByName}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => handleUseSuggestion(s)} className="text-xs bg-teal-bg text-teal-text px-3 py-1.5 rounded-lg hover:bg-teal-brand/20 transition-colors">
+                          Use this suggestion
+                        </button>
+                        <button onClick={() => handleDismiss(s.id)} className="text-xs bg-[#F1EFE8] text-[#5F5E5A] px-3 py-1.5 rounded-lg hover:bg-[#E7E5DD] transition-colors">
+                          Dismiss
+                        </button>
+                      </div>
                     </div>
-                )}
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-lg p-5">
-                <h2 className="font-semibold text-gray-700 mb-3">All Skills ({allSkills.length})</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {allSkills.map((s) => (
-                        <div key={s.id} className="text-sm text-gray-600 border border-gray-100 rounded px-3 py-1.5">
-                            {s.name}
-                        </div>
-                    ))}
-                </div>
+            <div className="bg-white border border-[#E7E5DD] rounded-xl p-5">
+              <h2 className="font-display text-base font-semibold text-ink mb-3">All skills ({allSkills.length})</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {allSkills.map((s) => (
+                  <div key={s.id} className="font-tag text-sm text-[#5F5E5A] border border-[#F1EFE8] rounded-lg px-3 py-1.5">
+                    {s.name}
+                  </div>
+                ))}
+              </div>
             </div>
         </AdminLayout>
     );

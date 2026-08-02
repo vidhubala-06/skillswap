@@ -32,16 +32,16 @@ function ActionModal({ type, report, onClose, onSuccess }) {
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                <h2 className="text-lg font-bold text-gray-800 mb-3">{c.title}</h2>
-                <p className="text-sm text-gray-500 mb-3">Regarding: {report.reportedName}</p>
+            <div className="bg-white rounded-xl p-6 w-full max-w-md">
+                <h2 className="font-display text-lg font-semibold text-ink mb-3">{c.title}</h2>
+                <p className="text-sm text-[#6B6E76] mb-3">Regarding: {report.reportedName}</p>
                 {type === 'tempBan' ? (
                     <input
                         type="number"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={c.placeholder}
-                        className="w-full border border-gray-300 rounded px-3 py-2 mb-3"
+                        className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
                     />
                 ) : (
                     <textarea
@@ -49,13 +49,13 @@ function ActionModal({ type, report, onClose, onSuccess }) {
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={c.placeholder}
                         rows={3}
-                        className="w-full border border-gray-300 rounded px-3 py-2 mb-3"
+                        className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
                     />
                 )}
-                {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+                {error && <p className="text-[#791F1F] text-sm mb-3">{error}</p>}
                 <div className="flex gap-3">
-                    <button onClick={onClose} className="flex-1 bg-gray-100 text-gray-700 py-2 rounded hover:bg-gray-200">Cancel</button>
-                    <button onClick={handleSubmit} disabled={loading || !input} className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50">
+                    <button onClick={onClose} className="flex-1 bg-[#F1EFE8] text-ink py-2 rounded-lg hover:bg-[#E7E5DD] transition-colors text-sm">Cancel</button>
+                    <button onClick={handleSubmit} disabled={loading || !input} className="flex-1 bg-teal-brand text-white py-2 rounded-lg hover:bg-teal-brand/90 disabled:opacity-40 transition-colors text-sm">
                         {loading ? 'Submitting...' : 'Confirm'}
                     </button>
                 </div>
@@ -118,52 +118,52 @@ function AdminReports() {
 
     return (
         <AdminLayout>
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">Reports ({reports.length})</h1>
+            <h1 className="font-display text-2xl font-semibold text-ink mb-6">Reports ({reports.length})</h1>
 
-            <div className="flex gap-2 mb-4 border-b border-gray-200">
-              <button onClick={() => setTab('pending')} className={`px-4 py-2 text-sm font-medium border-b-2 ${tab === 'pending' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'}`}>
+            <div className="flex gap-1 mb-6 border-b border-[#E7E5DD]">
+              <button onClick={() => setTab('pending')} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'pending' ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'}`}>
                 Pending ({reports.length})
               </button>
-              <button onClick={() => setTab('handled')} className={`px-4 py-2 text-sm font-medium border-b-2 ${tab === 'handled' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'}`}>
+              <button onClick={() => setTab('handled')} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'handled' ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'}`}>
                 Handled ({handledReports.length})
               </button>
             </div>
 
-            {message && <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4 text-sm">{message}</div>}
+            {message && <div className="bg-teal-bg text-teal-text p-3 rounded-lg mb-4 text-sm">{message}</div>}
 
             {loading ? (
                 <p className="text-gray-500">Loading...</p>
             ) : (
                 <>
                     {tab === 'pending' && (
-                        reports.length === 0 ? <p className="text-gray-500 text-sm">No pending reports.</p> :
+                        reports.length === 0 ? <p className="text-[#9A9890] text-sm">No pending reports.</p> :
                         <div className="space-y-3">
                             {reports.map((r) => (
-                                <div key={r.id} className="bg-white border border-gray-200 rounded-lg p-4">
-                                    <p className="text-sm text-gray-800">
-                                        <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
-                                    </p>
-                                    <p className="text-sm text-gray-600 mt-1 italic">"{r.reason}"</p>
-                                    <div className="flex gap-2 mt-3">
-                                        <button onClick={() => handleDismiss(r.id)} className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-200">Dismiss</button>
-                                        <button onClick={() => setModal({ type: 'warn', report: r })} className="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded hover:bg-amber-100">Send Warning</button>
-                                        <button onClick={() => setModal({ type: 'tempBan', report: r })} className="text-xs bg-orange-50 text-orange-700 px-3 py-1.5 rounded hover:bg-orange-100">Temporary Ban</button>
-                                        <button onClick={() => handlePermanentBan(r)} className="text-xs bg-red-50 text-red-700 px-3 py-1.5 rounded hover:bg-red-100">Permanent Ban</button>
-                                    </div>
+                                <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4">
+                                  <p className="text-sm text-ink">
+                                    <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
+                                  </p>
+                                  <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
+                                  <div className="flex gap-2 mt-3">
+                                    <button onClick={() => handleDismiss(r.id)} className="text-xs bg-[#F1EFE8] text-[#5F5E5A] px-3 py-1.5 rounded-lg hover:bg-[#E7E5DD] transition-colors">Dismiss</button>
+                                    <button onClick={() => setModal({ type: 'warn', report: r })} className="text-xs bg-amber-bg text-amber-text px-3 py-1.5 rounded-lg hover:bg-amber-brand/20 transition-colors">Send warning</button>
+                                    <button onClick={() => setModal({ type: 'tempBan', report: r })} className="text-xs bg-[#FAECE7] text-[#712B13] px-3 py-1.5 rounded-lg hover:bg-[#F0997B]/30 transition-colors">Temporary ban</button>
+                                    <button onClick={() => handlePermanentBan(r)} className="text-xs bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors">Permanent ban</button>
+                                  </div>
                                 </div>
                             ))}
                         </div>
                     )}
 
                     {tab === 'handled' && (
-                      handledReports.length === 0 ? <p className="text-gray-500 text-sm">No handled reports yet.</p> :
+                      handledReports.length === 0 ? <p className="text-[#9A9890] text-sm">No handled reports yet.</p> :
                       handledReports.map((r) => (
-                        <div key={r.id} className="bg-white border border-gray-200 rounded-lg p-4">
-                          <p className="text-sm text-gray-800">
+                        <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4">
+                          <p className="text-sm text-ink">
                             <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
                           </p>
-                          <p className="text-sm text-gray-600 mt-1 italic">"{r.reason}"</p>
-                          <span className="inline-block mt-2 text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                          <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
+                          <span className="inline-block mt-2 text-xs px-2.5 py-1 rounded-full bg-[#F1EFE8] text-[#6B6E76]">
                             {r.status.replace('_', ' ')}
                           </span>
                         </div>

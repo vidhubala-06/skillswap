@@ -65,19 +65,19 @@ function CooldownSelection() {
 
   return (
     <Layout>
-      <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-lg p-6">
-        <h1 className="text-lg font-bold text-gray-800 mb-2">
-          You taught <span className="text-blue-600">{skillName}</span>
+      <div className="max-w-md mx-auto bg-white border border-[#E7E5DD] rounded-xl p-7">
+        <h1 className="font-display text-lg font-semibold text-ink mb-2">
+          You taught <span className="font-tag text-teal-text bg-teal-bg px-2 py-0.5 rounded">{skillName}</span>
         </h1>
-        <p className="text-sm text-gray-500 mb-5">
+        <p className="text-sm text-[#6B6E76] mb-5">
           Set a cooldown period before you can be matched to teach this skill again.
         </p>
 
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>}
+        {error && <div className="bg-[#FCEBEB] text-[#791F1F] p-3 rounded-lg mb-4 text-sm">{error}</div>}
 
         <form onSubmit={handleConfirm} className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Cooldown period (in days)</label>
+            <label className="block text-sm font-medium text-ink mb-1">Cooldown period (in days)</label>
             <input
               type="number"
               min="0"
@@ -85,13 +85,13 @@ function CooldownSelection() {
               value={days}
               onChange={(e) => setDays(e.target.value)}
               placeholder="e.g. 14"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
             />
           </div>
           <button
             type="submit"
             disabled={submitting || !days}
-            className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="w-full bg-teal-brand text-white py-2.5 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
           >
             {submitting ? 'Saving...' : 'Confirm'}
           </button>
@@ -100,7 +100,7 @@ function CooldownSelection() {
         <button
           onClick={handleNil}
           disabled={submitting}
-          className="w-full mt-3 bg-gray-100 text-gray-700 py-2 rounded font-medium hover:bg-gray-200 disabled:opacity-50"
+          className="w-full mt-3 bg-[#F1EFE8] text-ink py-2.5 rounded-lg font-medium text-sm hover:bg-[#E7E5DD] disabled:opacity-40 transition-colors"
         >
           Nil (no cooldown)
         </button>

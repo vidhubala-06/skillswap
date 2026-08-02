@@ -29,16 +29,21 @@ function FeedUserProfile() {
 
     return (
         <Layout>
-            <div className="mb-6">
-                <h1 className="text-xl font-bold text-gray-800">{data.name}</h1>
-                <div className="flex gap-2 mt-2">
-                    {data.skillBadges.map((s, i) => (
-                        <span key={i} className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full">{s}</span>
-                    ))}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-14 h-14 rounded-full bg-teal-bg text-teal-text font-display font-semibold text-xl flex items-center justify-center flex-shrink-0">
+                {data.name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <h1 className="font-display text-xl font-semibold text-ink">{data.name}</h1>
+                <div className="flex gap-2 mt-1.5">
+                  {data.skillBadges.map((s, i) => (
+                    <span key={i} className="font-tag text-xs bg-teal-bg text-teal-text px-2 py-1 rounded-lg">{s}</span>
+                  ))}
                 </div>
+              </div>
             </div>
 
-            <h2 className="font-semibold text-gray-700 mb-3">Projects ({data.projects.length})</h2>
+            <h2 className="font-display text-base font-semibold text-ink mb-3">Projects ({data.projects.length})</h2>
             {data.projects.length === 0 ? (
                 <p className="text-gray-500 text-sm">No projects shared yet.</p>
             ) : (

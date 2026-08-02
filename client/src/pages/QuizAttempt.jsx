@@ -75,37 +75,37 @@ function QuizAttempt() {
     <Layout>
       <div className="max-w-2xl mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <span className="text-sm text-gray-500">Question {currentIndex + 1} of {totalQuestions}</span>
+          <span className="text-sm text-[#9A9890]">Question {currentIndex + 1} of {totalQuestions}</span>
           {timeLeft !== null && (
-            <span className={`text-sm font-medium ${timeLeft < 60000 ? 'text-red-600' : 'text-gray-600'}`}>
+            <span className={`text-sm font-medium ${timeLeft < 60000 ? 'text-[#791F1F]' : 'text-[#6B6E76]'}`}>
               {formatTime(timeLeft)}
             </span>
           )}
         </div>
 
-        <div className="w-full bg-gray-200 rounded-full h-1.5 mb-6">
+        <div className="w-full bg-[#F1EFE8] rounded-full h-1.5 mb-6">
           <div
-            className="bg-blue-600 h-1.5 rounded-full transition-all"
+            className="bg-teal-brand h-1.5 rounded-full transition-all"
             style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
           />
         </div>
 
         {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>
+          <div className="bg-[#FCEBEB] text-[#791F1F] p-3 rounded-lg mb-4 text-sm">{error}</div>
         )}
 
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <p className="text-lg font-medium text-gray-800 mb-5">{currentQuestion.question}</p>
+        <div className="bg-white border border-[#E7E5DD] rounded-xl p-6">
+          <p className="text-lg font-medium text-ink mb-5">{currentQuestion.question}</p>
 
           <div className="space-y-3">
             {currentQuestion.options.map((opt) => (
               <button
                 key={opt.id}
                 onClick={() => setSelectedOption(opt.id)}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+                className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${
                   selectedOption === opt.id
-                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:bg-gray-50 text-gray-700'
+                    ? 'border-teal-brand bg-teal-bg text-teal-text'
+                    : 'border-[#E7E5DD] hover:bg-[#F5F4EF] text-[#3D3D3A]'
                 }`}
               >
                 {opt.text}
@@ -116,9 +116,9 @@ function QuizAttempt() {
           <button
             onClick={handleNext}
             disabled={!selectedOption || submitting}
-            className="w-full mt-6 bg-blue-600 text-white py-2.5 rounded font-medium hover:bg-blue-700 disabled:opacity-40"
+            className="w-full mt-6 bg-teal-brand text-white py-2.5 rounded-lg font-medium hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
           >
-            {submitting ? 'Submitting...' : isLastQuestion ? 'Submit Quiz' : 'Next'}
+            {submitting ? 'Submitting...' : isLastQuestion ? 'Submit quiz' : 'Next'}
           </button>
         </div>
       </div>

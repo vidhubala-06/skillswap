@@ -151,88 +151,89 @@ function ActiveSwap() {
 
   return (
     <Layout>
-      <div className="max-w-xl mx-auto bg-white border border-gray-200 rounded-lg p-6">
-        <h1 className="text-xl font-bold text-gray-800">Swap with {swap.partnerName}</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          You're learning <strong>{swap.wantedSkillName}</strong>, teaching <strong>{swap.offeredSkillName}</strong>
+      <div className="max-w-xl mx-auto bg-white border border-[#E7E5DD] rounded-xl p-7">
+        <h1 className="font-display text-xl font-semibold text-ink">Swap with {swap.partnerName}</h1>
+        <p className="text-sm text-[#6B6E76] mt-1.5">
+          You're learning <span className="font-tag text-violet-text bg-violet-bg px-2 py-0.5 rounded">{swap.wantedSkillName}</span>
+          {' '}· teaching <span className="font-tag text-teal-text bg-teal-bg px-2 py-0.5 rounded">{swap.offeredSkillName}</span>
         </p>
 
-        {error && <div className="bg-red-100 text-red-700 p-3 rounded mt-4 text-sm">{error}</div>}
+        {error && <div className="bg-[#FCEBEB] text-[#791F1F] p-3 rounded-lg mt-4 text-sm">{error}</div>}
 
         {!isScheduled ? (
           <form onSubmit={handleSchedule} className="mt-6 space-y-4">
-            <div className="bg-blue-50 text-blue-700 p-3 rounded text-sm">
-              Enter your session date and time to continue.
+            <div className="bg-teal-bg text-teal-text p-3.5 rounded-xl text-sm">
+              Enter your session date and time to unlock the rest of this page.
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Session Date</label>
+              <label className="block text-sm font-medium text-ink mb-1">Session date</label>
               <input
                 type="date"
                 value={sessionDate}
                 onChange={(e) => setSessionDate(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Session Time</label>
+              <label className="block text-sm font-medium text-ink mb-1">Session time</label>
               <input
                 type="time"
                 value={sessionTime}
                 onChange={(e) => setSessionTime(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
               />
             </div>
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
+              className="w-full bg-teal-brand text-white py-2.5 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
             >
-              {saving ? 'Saving...' : 'Confirm Session'}
+              {saving ? 'Saving...' : 'Confirm session'}
             </button>
           </form>
         ) : (
           <div className="mt-6">
-            <div className="bg-gray-50 border border-gray-200 rounded p-3 text-sm text-gray-700 flex items-center justify-between">
-              <span>Session: {swap.sessionDate} at {swap.sessionTime}</span>
+            <div className="bg-[#F5F4EF] border border-[#E7E5DD] rounded-xl p-4 flex items-center justify-between">
+              <span className="text-sm text-ink">Session: <span className="font-medium">{swap.sessionDate} at {swap.sessionTime}</span></span>
               <button
                 onClick={() => setShowReschedule(!showReschedule)}
-                className="text-blue-600 text-xs hover:underline"
+                className="text-teal-text text-xs font-medium hover:underline"
               >
                 {showReschedule ? 'Cancel' : 'Need another session?'}
               </button>
             </div>
 
             {showReschedule && (
-              <form onSubmit={handleSchedule} className="mt-3 space-y-3 bg-blue-50 p-4 rounded">
-                <p className="text-xs text-blue-700">Set a new date/time if you need more time to finish teaching.</p>
+              <form onSubmit={handleSchedule} className="mt-3 space-y-3 bg-teal-bg/40 p-4 rounded-xl">
+                <p className="text-xs text-teal-text">Set a new date/time if you need more time to finish teaching.</p>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Session Date</label>
+                  <label className="block text-sm font-medium text-ink mb-1">New session date</label>
                   <input
                     type="date"
                     value={sessionDate}
                     onChange={(e) => setSessionDate(e.target.value)}
                     required
-                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Session Time</label>
+                  <label className="block text-sm font-medium text-ink mb-1">New session time</label>
                   <input
                     type="time"
                     value={sessionTime}
                     onChange={(e) => setSessionTime(e.target.value)}
                     required
-                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
+                  className="w-full bg-teal-brand text-white py-2 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
                 >
-                  {saving ? 'Updating...' : 'Confirm New Session'}
+                  {saving ? 'Updating...' : 'Confirm new session'}
                 </button>
               </form>
             )}
@@ -241,53 +242,57 @@ function ActiveSwap() {
               {canJoinMeeting ? (
                 <button
                   onClick={() => navigate(`/meeting/${id}`)}
-                  className="w-full bg-green-600 text-white py-2 rounded font-medium hover:bg-green-700"
+                  className="w-full bg-violet-brand text-white py-2.5 rounded-lg font-medium text-sm hover:bg-violet-brand/90 transition-colors"
                 >
-                  🎥 Join Meeting
+                  Join meeting
                 </button>
               ) : (
-                <p className="text-xs text-gray-400 text-center py-2">
-                  Join Meeting unlocks 10 minutes before your session
+                <p className="text-xs text-[#9A9890] text-center py-2">
+                  Join meeting unlocks 10 minutes before your session
                 </p>
               )}
             </div>
 
             {sessionHistory.length > 1 && (
-              <div className="mt-3 text-xs text-gray-500">
-                <p className="font-medium mb-1">Session History</p>
+              <div className="mt-3 text-xs text-[#9A9890]">
+                <p className="font-medium mb-1 text-[#6B6E76]">Session history</p>
                 {sessionHistory.map((s, i) => (
                   <p key={i}>Session {i + 1}: {s.sessionDate} at {s.sessionTime} (set by {s.scheduledByName})</p>
                 ))}
               </div>
             )}
 
-            <div className="mt-5">
-              <p className="text-sm font-medium text-gray-700 mb-2">Completion Status</p>
+            <div className="mt-5 pt-5 border-t border-[#E7E5DD]">
+              <p className="text-sm font-medium text-ink mb-2">Completion status</p>
               <div className="flex gap-4 text-sm">
-                <span>You: {myMarkedComplete ? '✅ Marked Complete' : '⏳ Waiting'}</span>
-                <span>Partner: {partnerMarkedComplete ? '✅ Marked Complete' : '⏳ Waiting'}</span>
+                <span className={myMarkedComplete ? 'text-teal-text font-medium' : 'text-[#9A9890]'}>
+                  You: {myMarkedComplete ? 'Marked complete' : 'Waiting'}
+                </span>
+                <span className={partnerMarkedComplete ? 'text-teal-text font-medium' : 'text-[#9A9890]'}>
+                  Partner: {partnerMarkedComplete ? 'Marked complete' : 'Waiting'}
+                </span>
               </div>
             </div>
 
             {!sessionHasPassed && !myMarkedComplete && (
-              <p className="mt-4 text-xs text-amber-600">
+              <p className="mt-4 text-xs text-amber-text">
                 You'll be able to mark this complete after your scheduled session time.
               </p>
             )}
             <button
               onClick={handleMarkComplete}
               disabled={myMarkedComplete || marking || !sessionHasPassed}
-              className="mt-2 w-full bg-green-600 text-white py-2 rounded font-medium hover:bg-green-700 disabled:opacity-50"
+              className="mt-2 w-full bg-teal-brand text-white py-2.5 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
             >
-              {myMarkedComplete ? 'You already marked this complete' : marking ? 'Submitting...' : 'Mark as Complete'}
+              {myMarkedComplete ? 'You already marked this complete' : marking ? 'Submitting...' : 'Mark as complete'}
             </button>
           </div>
         )}
 
-        <div className="mt-6 pt-4 border-t border-gray-100">
-          {reportMessage && <p className="text-xs text-gray-500 mb-2">{reportMessage}</p>}
-          <button onClick={() => setShowReport(!showReport)} className="text-xs text-red-500 hover:underline">
-            Report an Issue
+        <div className="mt-6 pt-4 border-t border-[#E7E5DD]">
+          {reportMessage && <p className="text-xs text-[#9A9890] mb-2">{reportMessage}</p>}
+          <button onClick={() => setShowReport(!showReport)} className="text-xs text-[#B4B2A9] hover:text-[#993C1D] transition-colors">
+            Report an issue
           </button>
           {showReport && (
             <form onSubmit={handleReport} className="mt-2 space-y-2">
@@ -297,10 +302,10 @@ function ActiveSwap() {
                 placeholder="Describe the issue..."
                 rows={2}
                 required
-                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                className="w-full border border-[#D8D6CC] rounded-lg px-2 py-1.5 text-xs"
               />
-              <button type="submit" className="bg-red-600 text-white text-xs px-3 py-1.5 rounded hover:bg-red-700">
-                Submit Report
+              <button type="submit" className="bg-[#993C1D] text-white text-xs px-3 py-1.5 rounded-lg hover:bg-[#791F1F]">
+                Submit report
               </button>
             </form>
           )}

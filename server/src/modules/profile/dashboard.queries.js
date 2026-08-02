@@ -51,8 +51,41 @@ async function getDashboardData(userId) {
     },
     wantedCount: wantedCountRows[0].count,
     activeSwap,
-    pendingRequestsCount: pendingRequestRows[0].count
+    pendingRequestsCount: pendingRequestRows[0].count,
+    recentSwaps: await getRecentCompletedSwaps(userId),
+    feedTeaser: await getFeedTeaser()
   };
 }
 
-module.exports = { getDashboardData };
+async function getRecentCompletedSwaps(userId, limit = 3) {
+  const [rows] = await pool.query(
+    `SELECT sr.id, sr.completed_at AS completedAt,
+            CASE WHEN sr.requester_id = ? THEN sr.recipient_id ELSE sr.requester_id END AS partnerId,
+            p.name AS partnerName,
+            CASE WHEN sr.requester_id = ? THEN os.name ELSE ws.name END AS skillTaught,
+            CASE WHEN sr.requester_id = ? THEN ws.name ELSE os.name END AS skillLearned
+     FROM swap_requests sr
+     JOIN skills os ON os.id = sr.offered_skill_id
+     JOIN skills ws ON ws.id = sr.wanted_skill_id
+     JOIN profiles p ON p.user_id = (CASE WHEN sr.requester_id = ? THEN sr.recipient_id ELSE sr.requester_id END)
+     WHERE (sr.requester_id = ? OR sr.recipient_id = ?) AND sr.status = 'completed'
+     ORDER BY sr.completed_at DESC
+     LIMIT ?`,
+    [userId, userId, userId, userId, userId, userId, limit]
+  );
+  return rows;
+}
+
+async function getFeedTeaser(limit = 2) {
+  const [rows] = await pool.query(
+    `SELECT p.id, p.description, pr.name AS posterName
+     FROM projects p
+     JOIN profiles pr ON pr.user_id = p.user_id
+     ORDER BY p.created_at DESC
+     LIMIT ?`,
+    [limit]
+  );
+  return rows;
+}
+
+module.exports = { getDashboardData, getRecentCompletedSwaps, getFeedTeaser };

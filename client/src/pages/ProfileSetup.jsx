@@ -107,6 +107,7 @@ function ProfileSetup() {
             onAdd={(skill) => setKnownSkills([...knownSkills, skill])}
             onRemove={(id) => setKnownSkills(knownSkills.filter((s) => s.id !== id))}
             excludedIds={wantedSkills.map((s) => s.id)}
+            variant="teal"
           />
 
           <SkillSelector
@@ -115,6 +116,7 @@ function ProfileSetup() {
             onAdd={(skill) => setWantedSkills([...wantedSkills, skill])}
             onRemove={(id) => setWantedSkills(wantedSkills.filter((s) => s.id !== id))}
             excludedIds={knownSkills.map((s) => s.id)}
+            variant="violet"
           />
 
           <button

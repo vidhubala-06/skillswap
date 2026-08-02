@@ -46,31 +46,31 @@ function ShareProjectModal({ onClose, onSuccess }) {
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">Share a Project</h2>
+            <div className="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h2 className="font-display text-lg font-semibold text-ink mb-4">Share a project</h2>
 
-                {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-3 text-sm">{error}</div>}
+                {error && <div className="bg-[#FCEBEB] text-[#791F1F] p-2 rounded-lg mb-3 text-sm">{error}</div>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <label className="block text-sm font-medium text-ink mb-1">Description</label>
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             rows={3}
                             required
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Repo Link</label>
+                        <label className="block text-sm font-medium text-ink mb-1">Repo Link</label>
                         <input
                             type="url"
                             value={repoUrl}
                             onChange={(e) => setRepoUrl(e.target.value)}
                             placeholder="https://github.com/..."
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
                         />
                     </div>
 
@@ -80,20 +80,21 @@ function ShareProjectModal({ onClose, onSuccess }) {
                         onAdd={(skill) => setTechnologies([...technologies, skill])}
                         onRemove={(id) => setTechnologies(technologies.filter((s) => s.id !== id))}
                         excludedIds={[]}
+                        variant="neutral"
                     />
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Images (up to 5)</label>
+                        <label className="block text-sm font-medium text-ink mb-1">Images (up to 5)</label>
                         <input type="file" accept="image/*" multiple onChange={handleImageChange} className="text-sm" />
                         {images.length > 0 && <p className="text-xs text-gray-500 mt-1">{images.length} image(s) selected</p>}
                     </div>
 
                     <div className="flex gap-3">
-                        <button type="button" onClick={onClose} className="flex-1 bg-gray-100 text-gray-700 py-2 rounded hover:bg-gray-200">
+                        <button type="button" onClick={onClose} className="flex-1 bg-[#F1EFE8] text-ink py-2 rounded-lg hover:bg-[#E7E5DD] transition-colors text-sm">
                             Cancel
                         </button>
-                        <button type="submit" disabled={submitting} className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50">
-                            {submitting ? 'Posting...' : 'Post Project'}
+                        <button type="submit" disabled={submitting} className="flex-1 bg-teal-brand text-white py-2 rounded-lg hover:bg-teal-brand/90 disabled:opacity-40 transition-colors text-sm">
+                            {submitting ? 'Posting...' : 'Post project'}
                         </button>
                     </div>
                 </form>

@@ -1,12 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds }) {
+function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds, variant = 'teal' }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [suggestMessage, setSuggestMessage] = useState('');
   const debounceRef = useRef(null);
+
+  const variantStyles = {
+    teal: { bg: 'bg-teal-bg', text: 'text-teal-text', hover: 'hover:text-teal-brand' },
+    violet: { bg: 'bg-violet-bg', text: 'text-violet-text', hover: 'hover:text-violet-brand' },
+    neutral: { bg: 'bg-[#F1EFE8]', text: 'text-[#5F5E5A]', hover: 'hover:text-ink' }
+  };
+  const styles = variantStyles[variant] || variantStyles.teal;
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -60,20 +67,20 @@ function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds }) 
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <label className="block text-sm font-medium text-ink mb-2">{label}</label>
 
       {/* Selected chips */}
       <div className="flex flex-wrap gap-2 mb-3">
         {selectedSkills.map((skill) => (
           <span
             key={skill.id}
-            className="flex items-center gap-1 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"
+            className={`flex items-center gap-1.5 ${styles.bg} ${styles.text} px-3 py-1.5 rounded-lg text-sm font-tag`}
           >
             {skill.name}
             <button
               type="button"
               onClick={() => onRemove(skill.id)}
-              className="text-blue-500 hover:text-blue-700 font-bold ml-1"
+              className={`${styles.text} ${styles.hover} font-sans font-bold ml-0.5`}
             >
               ×
             </button>
@@ -89,17 +96,17 @@ function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds }) 
           onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); setSuggestMessage(''); }}
           onFocus={() => setShowDropdown(true)}
           placeholder="Search for a skill..."
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40 focus:border-teal-brand"
         />
 
         {showDropdown && query.trim().length > 0 && (
-          <div className="absolute z-10 w-full bg-white border border-gray-200 rounded mt-1 shadow-lg max-h-48 overflow-y-auto">
+          <div className="absolute z-10 w-full bg-white border border-[#E7E5DD] rounded-lg mt-1 shadow-md max-h-48 overflow-y-auto">
             {results.map((skill) => (
               <button
                 type="button"
                 key={skill.id}
                 onClick={() => handleSelect(skill)}
-                className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
+                className="block w-full text-left px-3 py-2 hover:bg-[#F5F4EF] text-sm text-ink"
               >
                 {skill.name}
               </button>
@@ -107,7 +114,7 @@ function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds }) 
             <button
               type="button"
               onClick={handleSuggest}
-              className="block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm text-blue-600 border-t border-gray-100"
+              className="block w-full text-left px-3 py-2 hover:bg-[#F5F4EF] text-sm text-teal-text border-t border-[#E7E5DD]"
             >
               + Add "{query}" as a new skill
             </button>
@@ -116,7 +123,7 @@ function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds }) 
       </div>
 
       {suggestMessage && (
-        <p className="text-xs text-gray-500 mt-1">{suggestMessage}</p>
+        <p className="text-xs text-[#9A9890] mt-1">{suggestMessage}</p>
       )}
     </div>
   );

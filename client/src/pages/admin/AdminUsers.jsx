@@ -39,51 +39,52 @@ function AdminUsers() {
 
     return (
         <AdminLayout>
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">All Users</h1>
+            <h1 className="font-display text-2xl font-semibold text-ink mb-6">All users</h1>
 
             <form onSubmit={handleSearch} className="mb-4 flex gap-2">
-                <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search by name or email..."
-                    className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700">
-                    Search
-                </button>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by name or email..."
+                className="flex-1 border border-[#D8D6CC] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-brand/40"
+              />
+              <button type="submit" className="bg-teal-brand text-white px-4 py-2 rounded-lg font-medium text-sm hover:bg-teal-brand/90 transition-colors">
+                Search
+              </button>
             </form>
 
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                {loading ? (
-                    <p className="p-4 text-gray-500 text-sm">Loading...</p>
-                ) : (
-                    <table className="w-full text-sm">
-                        <thead className="bg-gray-50 text-left text-gray-500">
-                            <tr>
-                                <th className="px-4 py-2">Name</th>
-                                <th className="px-4 py-2">Email</th>
-                                <th className="px-4 py-2">Verified</th>
-                                <th className="px-4 py-2">Status</th>
-                                <th className="px-4 py-2">Joined</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((u) => (
-                                <tr key={u.id} onClick={() => navigate(`/admin/users/${u.id}`)} className="border-t border-gray-100 hover:bg-gray-50 cursor-pointer">
-                                    <td className="px-4 py-2">{u.name || '—'}</td>
-                                    <td className="px-4 py-2">{u.email}</td>
-                                    <td className="px-4 py-2">{u.emailVerified ? '✅' : '❌'}</td>
-                                    <td className="px-4 py-2">
-                                        <span className={`text-xs px-2 py-1 rounded-full ${u.accountStatus === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                            }`}>{u.accountStatus}</span>
-                                    </td>
-                                    <td className="px-4 py-2 text-gray-500">{u.createdAt?.split('T')[0]}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+            <div className="bg-white border border-[#E7E5DD] rounded-xl overflow-hidden">
+              {loading ? (
+                <p className="p-4 text-[#9A9890] text-sm">Loading...</p>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead className="bg-[#F5F4EF] text-left text-[#6B6E76]">
+                    <tr>
+                      <th className="px-4 py-2.5 font-medium">Name</th>
+                      <th className="px-4 py-2.5 font-medium">Email</th>
+                      <th className="px-4 py-2.5 font-medium">Verified</th>
+                      <th className="px-4 py-2.5 font-medium">Status</th>
+                      <th className="px-4 py-2.5 font-medium">Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((u) => (
+                      <tr key={u.id} onClick={() => navigate(`/admin/users/${u.id}`)} className="border-t border-[#F1EFE8] hover:bg-[#F5F4EF] cursor-pointer transition-colors">
+                        <td className="px-4 py-2.5 text-ink">{u.name || '—'}</td>
+                        <td className="px-4 py-2.5 text-[#6B6E76]">{u.email}</td>
+                        <td className="px-4 py-2.5">{u.emailVerified ? '✓' : '—'}</td>
+                        <td className="px-4 py-2.5">
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            u.accountStatus === 'active' ? 'bg-teal-bg text-teal-text' : 'bg-[#FCEBEB] text-[#791F1F]'
+                          }`}>{u.accountStatus}</span>
+                        </td>
+                        <td className="px-4 py-2.5 text-[#9A9890]">{u.createdAt?.split('T')[0]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
 
             {totalPages > 1 && (
@@ -92,7 +93,7 @@ function AdminUsers() {
                         <button
                             key={p}
                             onClick={() => setPage(p)}
-                            className={`px-3 py-1 rounded text-sm ${page === p ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}
+                            className={`px-3 py-1 rounded-lg text-sm transition-colors ${page === p ? 'bg-teal-brand text-white' : 'bg-[#F1EFE8] text-[#6B6E76]'}`}
                         >
                             {p}
                         </button>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import AuthLayout from '../components/AuthLayout';
 
 function VerifyEmailPending() {
   const location = useLocation();
@@ -28,30 +29,30 @@ function VerifyEmailPending() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">Check your inbox</h1>
-        <p className="text-gray-600 mb-6">
-          We've sent a verification link to <strong>{email}</strong>. Click it to activate your account.
+    <AuthLayout>
+      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] text-center">
+        <h1 className="font-display text-xl font-semibold text-ink mb-2">Check your inbox</h1>
+        <p className="text-sm text-[#6B6E76] mb-6">
+          We've sent a verification link to <strong className="text-ink">{email}</strong>. Click it to activate your account.
         </p>
 
         {message && (
-          <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4 text-sm">{message}</div>
+          <div className="bg-teal-bg text-teal-text p-3 rounded-lg mb-4 text-sm">{message}</div>
         )}
 
         <button
           onClick={handleResend}
           disabled={cooldown > 0}
-          className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-teal-brand text-white py-2.5 rounded-lg font-medium text-sm hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
         >
-          {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend Email'}
+          {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend email'}
         </button>
 
-        <p className="text-sm text-gray-600 mt-4">
-          Wrong email? <a href="/signup" className="text-blue-600 hover:underline">Go back to Sign Up</a>
+        <p className="text-sm text-[#6B6E76] mt-5">
+          Wrong email? <a href="/signup" className="text-teal-text font-medium hover:underline">Go back to sign up</a>
         </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
 

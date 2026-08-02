@@ -83,32 +83,38 @@ function Notifications() {
 
     return (
         <Layout>
-            <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold text-gray-800">Notifications</h1>
-                <button onClick={handleMarkAllRead} className="text-sm text-blue-600 hover:underline">
-                    Mark all as read
-                </button>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="font-display text-2xl font-semibold text-ink">Notifications</h1>
+                <p className="text-sm text-[#6B6E76] mt-1">Stay on top of requests, swaps, and updates.</p>
+              </div>
+              <button onClick={handleMarkAllRead} className="text-sm text-teal-text font-medium hover:underline">
+                Mark all as read
+              </button>
             </div>
 
             {loading ? (
                 <p className="text-gray-500">Loading...</p>
             ) : notifications.length === 0 ? (
-                <p className="text-gray-500 text-sm">No notifications yet.</p>
+                <div className="bg-white border border-[#E7E5DD] rounded-xl p-10 text-center">
+                  <p className="text-sm text-[#6B6E76]">No notifications yet.</p>
+                </div>
             ) : (
                 <div className="space-y-2">
                     {notifications.map((n) => (
                         <button
-                            key={n.id}
-                            onClick={() => handleClick(n)}
-                            className={`w-full text-left flex items-start gap-3 p-4 rounded-lg border ${n.isRead ? 'bg-white border-gray-200' : 'bg-blue-50 border-blue-200'
-                                }`}
+                          key={n.id}
+                          onClick={() => handleClick(n)}
+                          className={`w-full text-left flex items-start gap-3 p-4 rounded-xl border transition-colors ${
+                            n.isRead ? 'bg-white border-[#E7E5DD]' : 'bg-teal-bg/50 border-teal-brand/20'
+                          }`}
                         >
-                            <span className="text-lg">{ICONS[n.type] || '🔔'}</span>
-                            <div className="flex-1">
-                                <p className={`text-sm ${n.isRead ? 'text-gray-600' : 'text-gray-800 font-medium'}`}>{n.message}</p>
-                                <p className="text-xs text-gray-400 mt-0.5">{timeAgo(n.createdAt)}</p>
-                            </div>
-                            {!n.isRead && <span className="w-2 h-2 bg-blue-600 rounded-full mt-1.5"></span>}
+                          <span className="text-lg">{ICONS[n.type] || '🔔'}</span>
+                          <div className="flex-1">
+                            <p className={`text-sm ${n.isRead ? 'text-[#6B6E76]' : 'text-ink font-medium'}`}>{n.message}</p>
+                            <p className="text-xs text-[#9A9890] mt-0.5">{timeAgo(n.createdAt)}</p>
+                          </div>
+                          {!n.isRead && <span className="w-2 h-2 bg-teal-brand rounded-full mt-1.5 flex-shrink-0"></span>}
                         </button>
                     ))}
                 </div>

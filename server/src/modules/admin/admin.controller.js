@@ -2,7 +2,8 @@ const {
   getDashboardStats, getPendingSuggestions, createSkillDirect, 
   markSuggestionHandled, dismissSuggestion, getAllSkills, getUsersList,
   getUserDetail, getAllProjectsForAdmin, deleteProjectAdmin,
-  getPendingProjectReports, dismissProjectReport
+  getPendingProjectReports, dismissProjectReport,
+  getRecentSignups, getRecentCompletedSwapsAdmin
 } = require('./admin.queries');
 const { normalize } = require('../../utils/normalize');
 const { generateQuestionBankForSkill } = require('../quiz/quiz.service');
@@ -10,13 +11,15 @@ const { getPendingReports, dismissReport, issueWarning, tempBanUser, permanentBa
 const { invalidateFeedCache } = require('../feed/feed.queries');
 
 async function dashboard(req, res) {
-    try {
-        const stats = await getDashboardStats();
-        return res.status(200).json(stats);
-    } catch (err) {
-        console.error('Admin dashboard error:', err);
-        return res.status(500).json({ error: 'Something went wrong' });
-    }
+  try {
+    const stats = await getDashboardStats();
+    const recentSignups = await getRecentSignups();
+    const recentSwaps = await getRecentCompletedSwapsAdmin();
+    return res.status(200).json({ ...stats, recentSignups, recentSwaps });
+  } catch (err) {
+    console.error('Admin dashboard error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
 }
 
 async function listSuggestions(req, res) {

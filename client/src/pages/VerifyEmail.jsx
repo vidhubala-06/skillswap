@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AuthLayout from '../components/AuthLayout';
 
 function VerifyEmail() {
   const [searchParams] = useSearchParams();
@@ -30,23 +31,23 @@ function VerifyEmail() {
   }, [searchParams, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
-        {status === 'verifying' && <p className="text-gray-600">Verifying your email...</p>}
+    <AuthLayout>
+      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] text-center">
+        {status === 'verifying' && <p className="text-[#6B6E76] text-sm">Verifying your email...</p>}
         {status === 'success' && (
           <>
-            <h1 className="text-2xl font-bold text-green-600 mb-2">Email Verified!</h1>
-            <p className="text-gray-600">{message} Redirecting to login...</p>
+            <h1 className="font-display text-xl font-semibold text-teal-text mb-2">Email verified</h1>
+            <p className="text-[#6B6E76] text-sm">{message} Redirecting to login...</p>
           </>
         )}
         {status === 'error' && (
           <>
-            <h1 className="text-2xl font-bold text-red-600 mb-2">Verification Failed</h1>
-            <p className="text-gray-600">{message}</p>
+            <h1 className="font-display text-xl font-semibold text-[#791F1F] mb-2">Verification failed</h1>
+            <p className="text-[#6B6E76] text-sm">{message}</p>
           </>
         )}
       </div>
-    </div>
+    </AuthLayout>
   );
 }
 

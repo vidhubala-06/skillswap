@@ -13,17 +13,17 @@ function formatCountdown(cooldownUntil) {
 
 function StatusBadge({ status, cooldownUntil }) {
   if (status === 'verified') {
-    return <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Verified</span>;
+    return <span className="text-xs font-medium bg-teal-bg text-teal-text px-2.5 py-1 rounded-full">Verified</span>;
   }
   if (status === 'cooldown') {
     const countdown = formatCountdown(cooldownUntil);
     return (
-      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+      <span className="text-xs font-medium bg-amber-bg text-amber-text px-2.5 py-1 rounded-full">
         {countdown ? `Cooldown: ${countdown}` : 'Cooldown ended'}
       </span>
     );
   }
-  return <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Not Started</span>;
+  return <span className="text-xs font-medium bg-[#F1EFE8] text-[#6B6E76] px-2.5 py-1 rounded-full">Not started</span>;
 }
 
 function QuizLanding() {
@@ -78,44 +78,45 @@ function QuizLanding() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">Verify Your Skills</h1>
+      <h1 className="font-display text-2xl font-semibold text-ink mb-1">Verify your skills</h1>
+      <p className="text-sm text-[#6B6E76] mb-4">Pass a quiz to confirm a skill and make it visible to potential matches.</p>
 
       {verifiedCount === 0 && (
-        <div className="bg-blue-50 text-blue-700 p-4 rounded-lg mb-6 text-sm">
+        <div className="bg-teal-bg text-teal-text p-4 rounded-xl mb-6 text-sm">
           Pass at least one quiz to unlock the rest of SkillSwap.
         </div>
       )}
 
       {error && (
-        <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">{error}</div>
+        <div className="bg-[#FCEBEB] text-[#791F1F] p-3 rounded-lg mb-4 text-sm">{error}</div>
       )}
 
       <div className="space-y-3">
         {skills.map((skill) => (
           <div
             key={skill.skill_id}
-            className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between"
+            className="bg-white border border-[#E7E5DD] rounded-xl p-4 flex items-center justify-between"
           >
             <div>
-              <p className="font-medium text-gray-800">{skill.name}</p>
-              <div className="mt-1">
+              <p className="font-medium text-ink font-tag">{skill.name}</p>
+              <div className="mt-1.5">
                 <StatusBadge status={skill.status} cooldownUntil={skill.cooldown_until} />
               </div>
               {skill.status === 'verified' && skill.self_rating && (
-                <p className="text-xs text-gray-500 mt-1">Your rating: {skill.self_rating}/10</p>
+                <p className="text-xs text-[#9A9890] mt-1.5">Your rating: {skill.self_rating}/10</p>
               )}
             </div>
 
             <button
               onClick={() => handleStart(skill.skill_id)}
               disabled={!canStart(skill) || starting === skill.skill_id}
-              className="bg-blue-600 text-white text-sm px-4 py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="bg-teal-brand text-white text-sm px-4 py-2 rounded-lg font-medium hover:bg-teal-brand/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {starting === skill.skill_id
                 ? 'Starting...'
                 : skill.status === 'cooldown'
-                ? 'Retry Quiz'
-                : 'Start Quiz'}
+                ? 'Retry quiz'
+                : 'Start quiz'}
             </button>
           </div>
         ))}

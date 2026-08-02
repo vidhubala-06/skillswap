@@ -52,36 +52,36 @@ function AdminFeed() {
 
   return (
     <AdminLayout>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Feed</h1>
+      <h1 className="font-display text-2xl font-semibold text-ink mb-6">Manage feed</h1>
 
-      {message && <div className="bg-blue-100 text-blue-700 p-3 rounded mb-4 text-sm">{message}</div>}
+      {message && <div className="bg-teal-bg text-teal-text p-3 rounded-lg mb-4 text-sm">{message}</div>}
 
       {/* Reported Projects */}
       <div className="mb-8">
-        <h2 className="font-semibold text-gray-700 mb-3">Reported Projects ({reports.length})</h2>
+        <h2 className="font-display text-base font-semibold text-ink mb-3">Reported projects ({reports.length})</h2>
         {reports.length === 0 ? (
-          <p className="text-sm text-gray-500">No pending reports.</p>
+          <p className="text-sm text-[#9A9890]">No pending reports.</p>
         ) : (
           <div className="space-y-3">
             {reports.map((r) => (
-              <div key={r.id} className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <p className="text-sm text-gray-800">
+              <div key={r.id} className="bg-amber-bg border border-amber-brand/20 rounded-xl p-4">
+                <p className="text-sm text-ink">
                   <strong>{r.reporterName}</strong> reported a project by <strong>{r.posterName}</strong>
                 </p>
-                <p className="text-sm text-gray-600 mt-1 italic">"{r.reason}"</p>
-                <p className="text-xs text-gray-500 mt-2 border-l-2 border-gray-300 pl-2">{r.description}</p>
+                <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
+                <p className="text-xs text-[#9A9890] mt-2 border-l-2 border-[#D8D6CC] pl-2">{r.description}</p>
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={() => handleDismissReport(r.id)}
-                    className="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-200"
+                    className="text-xs bg-[#F1EFE8] text-[#5F5E5A] px-3 py-1.5 rounded-lg hover:bg-[#E7E5DD] transition-colors"
                   >
                     Dismiss
                   </button>
                   <button
                     onClick={() => handleDeleteProject({ id: r.projectId, posterName: r.posterName })}
-                    className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded hover:bg-red-100"
+                    className="text-xs bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors"
                   >
-                    Delete Project
+                    Delete project
                   </button>
                 </div>
               </div>
@@ -92,26 +92,26 @@ function AdminFeed() {
 
       {/* All Projects */}
       <div>
-        <h2 className="font-semibold text-gray-700 mb-3">All Projects ({projects.length})</h2>
+        <h2 className="font-display text-base font-semibold text-ink mb-3">All projects ({projects.length})</h2>
         {projects.length === 0 ? (
-          <p className="text-sm text-gray-500">No projects yet.</p>
+          <p className="text-sm text-[#9A9890]">No projects yet.</p>
         ) : (
           <div className="space-y-3">
             {projects.map((p) => (
-              <div key={p.id} className="bg-white border border-gray-200 rounded-lg p-4 flex items-start justify-between">
+              <div key={p.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4 flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-800">{p.posterName}</p>
-                  <p className="text-sm text-gray-600 mt-1">{p.description}</p>
+                  <p className="text-sm font-medium text-ink">{p.posterName}</p>
+                  <p className="text-sm text-[#6B6E76] mt-1">{p.description}</p>
                   {p.repoUrl && (
-                    <a href={p.repoUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">
+                    <a href={p.repoUrl} target="_blank" rel="noreferrer" className="text-xs text-teal-text hover:underline block mt-1.5 font-mono">
                       {p.repoUrl}
                     </a>
                   )}
-                  <p className="text-xs text-gray-400 mt-1">{p.createdAt?.split('T')[0]}</p>
+                  <p className="text-xs text-[#9A9890] mt-2">{p.createdAt?.split('T')[0]}</p>
                 </div>
                 <button
                   onClick={() => handleDeleteProject(p)}
-                  className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded hover:bg-red-100 ml-3"
+                  className="text-xs bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors ml-3"
                 >
                   Delete
                 </button>
