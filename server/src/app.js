@@ -56,6 +56,9 @@ app.use('/api/admin', adminRoutes);
 const reportsRoutes = require('./modules/reports/reports.routes');
 app.use('/api/reports', reportsRoutes);
 
+const feedRoutes = require('./modules/feed/feed.routes');
+app.use('/api/feed', feedRoutes);
+
 const server = http.createServer(app);
 initSocket(server);
 

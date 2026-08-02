@@ -142,8 +142,42 @@ async function getUserDetail(userId) {
   };
 }
 
+async function getAllProjectsForAdmin() {
+  const [rows] = await pool.query(
+    `SELECT p.id, p.description, p.repo_url AS repoUrl, p.created_at AS createdAt,
+            pr.name AS posterName, p.user_id AS userId
+     FROM projects p
+     JOIN profiles pr ON pr.user_id = p.user_id
+     ORDER BY p.created_at DESC`
+  );
+  return rows;
+}
+
+async function deleteProjectAdmin(projectId) {
+  await pool.query('DELETE FROM projects WHERE id = ?', [projectId]);
+}
+
+async function getPendingProjectReports() {
+  const [rows] = await pool.query(
+    `SELECT pr.id, pr.reason, pr.created_at AS createdAt, p.description, p.id AS projectId,
+            reporter.name AS reporterName, poster.name AS posterName
+     FROM project_reports pr
+     JOIN projects p ON p.id = pr.project_id
+     JOIN profiles reporter ON reporter.user_id = pr.reporter_id
+     JOIN profiles poster ON poster.user_id = p.user_id
+     WHERE pr.status = 'pending'
+     ORDER BY pr.created_at ASC`
+  );
+  return rows;
+}
+
+async function dismissProjectReport(id) {
+  await pool.query(`UPDATE project_reports SET status = 'dismissed' WHERE id = ?`, [id]);
+}
+
 module.exports = { 
   getDashboardStats, getPendingSuggestions, createSkillDirect, 
   markSuggestionHandled, dismissSuggestion, getAllSkills, getUsersList,
-  getUserDetail
+  getUserDetail, getAllProjectsForAdmin, deleteProjectAdmin,
+  getPendingProjectReports, dismissProjectReport
 };

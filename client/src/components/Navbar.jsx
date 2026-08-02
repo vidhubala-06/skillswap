@@ -9,6 +9,7 @@ function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const { locked, lockMessage } = useNavLock();
 
   const socketRef = useSocket();
@@ -24,6 +25,14 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
+    const socket = socketRef.current;
+    if (!socket) return;
+    const handleNewChat = () => setUnreadChatCount((prev) => prev + 1);
+    socket.on('chat:new-message', handleNewChat);
+    return () => socket.off('chat:new-message', handleNewChat);
+  }, []);
+
+  useEffect(() => {
     if (!user) return;
     const fetchCount = async () => {
       try {
@@ -34,6 +43,17 @@ function Navbar() {
     fetchCount();
     const interval = setInterval(fetchCount, 30000); // refresh every 30s
     return () => clearInterval(interval);
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchChatCount = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/chat/unread-count', { withCredentials: true });
+        setUnreadChatCount(res.data.count);
+      } catch (err) { /* silent */ }
+    };
+    fetchChatCount();
   }, [user]);
 
   const handleLogout = async () => {
@@ -55,6 +75,13 @@ function Navbar() {
             Dashboard
           </Link>
           <Link
+            to="/feed"
+            onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
+            className={`text-sm ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-blue-600'}`}
+          >
+            Feed
+          </Link>
+          <Link
             to="/profile"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
             className={`text-sm ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-blue-600'}`}
@@ -71,9 +98,14 @@ function Navbar() {
           <Link
             to="/chat"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-blue-600'}`}
+            className={`text-sm relative ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:text-blue-600'}`}
           >
             Chat
+            {unreadChatCount > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                {unreadChatCount}
+              </span>
+            )}
           </Link>
           <Link
             to="/notifications"

@@ -11,19 +11,26 @@ async function getConversationByPair(userIdA, userIdB) {
 }
 
 async function getInbox(userId) {
-    const [rows] = await pool.query(
-        `SELECT c.id AS conversationId,
+  const [rows] = await pool.query(
+    `SELECT c.id AS conversationId,
             CASE WHEN c.user_a_id = ? THEN c.user_b_id ELSE c.user_a_id END AS otherUserId,
             p.name AS otherUserName,
             (SELECT message FROM chat_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS lastMessage,
-            (SELECT created_at FROM chat_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS lastMessageAt
+            (SELECT created_at FROM chat_messages WHERE conversation_id = c.id ORDER BY created_at DESC LIMIT 1) AS lastMessageAt,
+            EXISTS (
+              SELECT 1 FROM chat_messages cm
+              LEFT JOIN conversation_reads cr ON cr.conversation_id = cm.conversation_id AND cr.user_id = ?
+              WHERE cm.conversation_id = c.id
+                AND cm.sender_id != ?
+                AND cm.created_at > COALESCE(cr.last_read_at, '1970-01-01')
+            ) AS hasUnread
      FROM conversations c
      JOIN profiles p ON p.user_id = (CASE WHEN c.user_a_id = ? THEN c.user_b_id ELSE c.user_a_id END)
      WHERE c.user_a_id = ? OR c.user_b_id = ?
      ORDER BY COALESCE(lastMessageAt, c.created_at) DESC`,
-        [userId, userId, userId, userId]
-    );
-    return rows;
+    [userId, userId, userId, userId, userId, userId]
+  );
+  return rows;
 }
 
 async function getConversationParticipants(conversationId) {
@@ -66,7 +73,29 @@ async function insertMessage({ id, conversationId, senderId, messageType, messag
     );
 }
 
+async function markConversationRead(conversationId, userId) {
+  await pool.query(
+    `INSERT INTO conversation_reads (conversation_id, user_id, last_read_at) VALUES (?, ?, NOW())
+     ON DUPLICATE KEY UPDATE last_read_at = NOW()`,
+    [conversationId, userId]
+  );
+}
+
+async function getUnreadChatCount(userId) {
+  const [rows] = await pool.query(
+    `SELECT COUNT(*) AS count
+     FROM chat_messages cm
+     JOIN conversations c ON c.id = cm.conversation_id
+     LEFT JOIN conversation_reads cr ON cr.conversation_id = cm.conversation_id AND cr.user_id = ?
+     WHERE (c.user_a_id = ? OR c.user_b_id = ?)
+       AND cm.sender_id != ?
+       AND cm.created_at > COALESCE(cr.last_read_at, '1970-01-01')`,
+    [userId, userId, userId, userId]
+  );
+  return rows[0].count;
+}
+
 module.exports = {
     getConversationByPair, getInbox, getConversationParticipants,
-    getSwapStatus, getMessages, insertMessage
+    getSwapStatus, getMessages, insertMessage, markConversationRead, getUnreadChatCount
 };

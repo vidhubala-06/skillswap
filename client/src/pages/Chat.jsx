@@ -32,8 +32,17 @@ function Chat() {
     }, []);
 
     useEffect(() => {
+        const socket = socketRef.current;
+        if (!socket) return;
+        const handleNewChatSomewhere = () => loadInbox();
+        socket.on('chat:new-message', handleNewChatSomewhere);
+        return () => socket.off('chat:new-message', handleNewChatSomewhere);
+    }, []);
+
+    useEffect(() => {
         if (conversationId) {
             loadMessages();
+            axios.post(`http://localhost:5000/api/chat/${conversationId}/read`, {}, { withCredentials: true }).catch(() => {});
             const socket = socketRef.current;
             if (socket) {
                 socket.emit('join-conversation', conversationId);
@@ -189,11 +198,20 @@ function Chat() {
                             <button
                                 key={c.conversationId}
                                 onClick={() => navigate(`/chat/${c.conversationId}`)}
-                                className={`w-full text-left p-3 border-b border-gray-100 hover:bg-gray-50 ${conversationId === c.conversationId ? 'bg-blue-50' : ''
+                                className={`w-full text-left p-3 border-b border-gray-100 hover:bg-gray-50 flex items-center justify-between ${conversationId === c.conversationId ? 'bg-blue-50' : ''
                                     }`}
                             >
-                                <p className="text-sm font-medium text-gray-800">{c.otherUserName}</p>
-                                {c.lastMessage && <p className="text-xs text-gray-500 truncate mt-0.5">{c.lastMessage}</p>}
+                                <div className="flex-1 min-w-0">
+                                    <p className={`text-sm truncate ${c.hasUnread ? 'font-bold text-gray-900' : 'font-medium text-gray-800'}`}>
+                                        {c.otherUserName}
+                                    </p>
+                                    {c.lastMessage && (
+                                        <p className={`text-xs truncate mt-0.5 ${c.hasUnread ? 'text-gray-700 font-medium' : 'text-gray-500'}`}>
+                                            {c.lastMessage}
+                                        </p>
+                                    )}
+                                </div>
+                                {c.hasUnread && <span className="w-2.5 h-2.5 bg-blue-600 rounded-full ml-2 flex-shrink-0"></span>}
                             </button>
                         ))
                     )}

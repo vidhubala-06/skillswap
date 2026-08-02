@@ -8,6 +8,7 @@ const {
   rejectRequest, cancelRequest
 } = require('./swapRequests.queries');
 const { createNotification } = require('../notifications/notifications.queries');
+const { hasAnyReportBetween } = require('../reports/reports.queries');
 const { sendSwapRequestEmail, sendSwapAcceptedEmail, sendSwapRejectedEmail } = require('../../config/resend');
 const { getIO } = require('../../socket');
 
@@ -43,6 +44,10 @@ async function sendRequest(req, res) {
     // No duplicate pending request
     if (await hasDuplicatePendingRequest({ requesterId, recipientId, wantedSkillId })) {
       return res.status(409).json({ error: 'DUPLICATE_PENDING_REQUEST', message: 'You already have a pending request with this user for this skill' });
+    }
+
+    if (await hasAnyReportBetween(requesterId, recipientId)) {
+      return res.status(403).json({ error: 'REPORT_HISTORY_BLOCK', message: 'You cannot send requests to this user' });
     }
 
     // Recipient not in teaching cooldown for this skill

@@ -1,11 +1,13 @@
 const { 
   getDashboardStats, getPendingSuggestions, createSkillDirect, 
   markSuggestionHandled, dismissSuggestion, getAllSkills, getUsersList,
-  getUserDetail
+  getUserDetail, getAllProjectsForAdmin, deleteProjectAdmin,
+  getPendingProjectReports, dismissProjectReport
 } = require('./admin.queries');
 const { normalize } = require('../../utils/normalize');
 const { generateQuestionBankForSkill } = require('../quiz/quiz.service');
 const { getPendingReports, dismissReport, issueWarning, tempBanUser, permanentBanUser, getHandledReports } = require('../reports/reports.queries');
+const { invalidateFeedCache } = require('../feed/feed.queries');
 
 async function dashboard(req, res) {
     try {
@@ -175,8 +177,47 @@ async function userDetail(req, res) {
   }
 }
 
+async function listProjects(req, res) {
+  try {
+    const projects = await getAllProjectsForAdmin();
+    return res.status(200).json({ projects });
+  } catch (err) {
+    console.error('List projects error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+async function deleteProject(req, res) {
+  try {
+    await deleteProjectAdmin(req.params.id);
+    await invalidateFeedCache();
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Delete project error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+async function listProjectReports(req, res) {
+  try {
+    const reports = await getPendingProjectReports();
+    return res.status(200).json({ reports });
+  } catch (err) {
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+async function dismissProjectReportHandler(req, res) {
+  try {
+    await dismissProjectReport(req.params.id);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
 module.exports = { 
   dashboard, listSuggestions, listAllSkills, addSkill, dismiss, listUsers,
   listReports, dismiss_report, warn, tempBan, permanentBan, listHandledReports,
-  userDetail
+  userDetail, listProjects, deleteProject, listProjectReports, dismissProjectReportHandler
 };

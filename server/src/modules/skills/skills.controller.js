@@ -5,7 +5,8 @@ const {
   findSkillByNormalizedName,
   findPendingSuggestion,
   incrementSuggestionCount,
-  createSuggestion
+  createSuggestion,
+  getAllSkillsList
 } = require('./skills.queries');
 
 async function search(req, res) {
@@ -64,4 +65,14 @@ async function suggest(req, res) {
   }
 }
 
-module.exports = { search, suggest };
+async function listAll(req, res) {
+  try {
+    const skills = await getAllSkillsList();
+    return res.status(200).json({ skills });
+  } catch (err) {
+    console.error('List all skills error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+module.exports = { search, suggest, listAll };

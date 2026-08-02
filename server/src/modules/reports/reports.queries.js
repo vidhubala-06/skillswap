@@ -103,8 +103,36 @@ async function getHandledReports() {
   return rows;
 }
 
+async function hasAnyReportBetween(userIdA, userIdB) {
+  const [rows] = await pool.query(
+    `SELECT id FROM reports 
+     WHERE (reporter_id = ? AND reported_user_id = ?) OR (reporter_id = ? AND reported_user_id = ?)
+     LIMIT 1`,
+    [userIdA, userIdB, userIdB, userIdA]
+  );
+  return rows.length > 0;
+}
+
+async function terminateActiveSwapBetween(userIdA, userIdB) {
+  const [rows] = await pool.query(
+    `SELECT id, status FROM swap_requests 
+     WHERE ((requester_id = ? AND recipient_id = ?) OR (requester_id = ? AND recipient_id = ?))
+       AND status IN ('pending', 'accepted', 'in_progress')`,
+    [userIdA, userIdB, userIdB, userIdA]
+  );
+
+  for (const row of rows) {
+    await pool.query(`UPDATE swap_requests SET status = 'cancelled', updated_at = NOW() WHERE id = ?`, [row.id]);
+    // only locked swaps (accepted/in_progress) actually have lock rows to clean up —
+    // deleting from user_locks for a pending swap is harmless (no matching rows exist), so this stays safe either way
+    await pool.query('DELETE FROM user_locks WHERE user_id IN (?, ?)', [userIdA, userIdB]);
+  }
+
+  return rows.length > 0;
+}
+
 module.exports = {
     getSwapParticipants, getConversationSwapId, createReport,
     getPendingReports, dismissReport, issueWarning, tempBanUser, permanentBanUser,
-    getHandledReports
+    getHandledReports, hasAnyReportBetween, terminateActiveSwapBetween
 };

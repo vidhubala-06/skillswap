@@ -1,4 +1,4 @@
-const { getSwapParticipants, getConversationSwapId, createReport } = require('./reports.queries');
+const { getSwapParticipants, getConversationSwapId, createReport, terminateActiveSwapBetween } = require('./reports.queries');
 
 async function submitReport(req, res) {
     try {
@@ -35,7 +35,14 @@ async function submitReport(req, res) {
 
         await createReport({ reporterId, reportedUserId, swapRequestId: resolvedSwapId, reason: reason.trim() });
 
-        return res.status(201).json({ success: true, message: 'Report submitted. Our team will review it.' });
+        const swapTerminated = await terminateActiveSwapBetween(reporterId, reportedUserId);
+
+        return res.status(201).json({ 
+          success: true, 
+          message: swapTerminated 
+            ? 'Report submitted. Your active swap with this user has been ended.' 
+            : 'Report submitted. Our team will review it.' 
+        });
     } catch (err) {
         console.error('Submit report error:', err);
         return res.status(500).json({ error: 'Something went wrong' });

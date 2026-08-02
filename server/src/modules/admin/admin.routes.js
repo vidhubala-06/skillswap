@@ -4,7 +4,7 @@ const { requireAuth, requireAdmin } = require('../../middleware/auth.middleware'
 const { 
   dashboard, listSuggestions, listAllSkills, addSkill, dismiss, listUsers,
   listReports, dismiss_report, warn, tempBan, permanentBan, listHandledReports,
-  userDetail
+  userDetail, listProjects, deleteProject, listProjectReports, dismissProjectReportHandler
 } = require('./admin.controller');
 
 router.use(requireAuth, requireAdmin);
@@ -16,6 +16,11 @@ router.post('/skills', addSkill);
 router.post('/skills/suggestions/:id/dismiss', dismiss);
 router.get('/users', listUsers);
 router.get('/users/:id', userDetail);
+
+router.get('/projects', listProjects);
+router.delete('/projects/:id', deleteProject);
+router.get('/projects/reports', listProjectReports);
+router.post('/projects/reports/:id/dismiss', dismissProjectReportHandler);
 
 router.get('/reports', listReports);
 router.get('/reports/handled', listHandledReports);

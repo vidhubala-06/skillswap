@@ -48,7 +48,13 @@ async function createSuggestion({ id, suggestedName, normalizedName, submittedBy
   );
 }
 
+async function getAllSkillsList() {
+  const [rows] = await pool.query('SELECT id, name FROM skills ORDER BY name ASC');
+  return rows;
+}
+
 module.exports = { 
   searchSkills, findSkillsByIds, findSkillByNormalizedName,
-  findPendingSuggestion, incrementSuggestionCount, createSuggestion 
+  findPendingSuggestion, incrementSuggestionCount, createSuggestion,
+  getAllSkillsList
 };

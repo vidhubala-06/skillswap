@@ -19,6 +19,7 @@ function AdminNavbar() {
                 <Link to="/admin/skills" className="text-sm text-gray-300 hover:text-white">Manage Skills</Link>
                 <Link to="/admin/reports" className="text-sm text-gray-300 hover:text-white">Reports</Link>
                 <Link to="/admin/users" className="text-sm text-gray-300 hover:text-white">Users</Link>
+                <Link to="/admin/feed" className="text-sm text-gray-300 hover:text-white">Manage Feed</Link>
                 <span className="text-sm text-gray-500">|</span>
                 <span className="text-sm text-gray-400">{user?.email}</span>
                 <button

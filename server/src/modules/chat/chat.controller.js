@@ -1,7 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const { getIO } = require('../../socket');
 const {
-    getInbox, getConversationParticipants, getSwapStatus, getMessages, insertMessage
+    getInbox, getConversationParticipants, getSwapStatus, getMessages, insertMessage,
+    getUnreadChatCount, markConversationRead
 } = require('./chat.queries');
 const fs = require('fs');
 const cloudinary = require('../../config/cloudinary');
@@ -85,6 +86,9 @@ async function sendMessage(req, res) {
 
         getIO().to(conversationId).emit('new-message', payload);
 
+        const recipientId = participants.userAId === senderId ? participants.userBId : participants.userAId;
+        getIO().to(recipientId).emit('chat:new-message');
+
         return res.status(201).json({ success: true, message: payload });
     } catch (err) {
         console.error('Send message error:', err);
@@ -146,6 +150,9 @@ async function uploadFile(req, res) {
 
         getIO().to(conversationId).emit('new-message', payload);
 
+        const recipientId = participants.userAId === senderId ? participants.userBId : participants.userAId;
+        getIO().to(recipientId).emit('chat:new-message');
+
         return res.status(201).json({ success: true, message: payload });
     } catch (err) {
         console.error('Upload file error:', err);
@@ -153,4 +160,24 @@ async function uploadFile(req, res) {
     }
 }
 
-module.exports = { listInbox, loadMessages, sendMessage, uploadFile };
+async function unreadCount(req, res) {
+  try {
+    const count = await getUnreadChatCount(req.user.id);
+    return res.status(200).json({ count });
+  } catch (err) {
+    console.error('Unread chat count error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+async function markRead(req, res) {
+  try {
+    await markConversationRead(req.params.conversationId, req.user.id);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Mark chat read error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+module.exports = { listInbox, loadMessages, sendMessage, uploadFile, unreadCount, markRead };

@@ -25,7 +25,10 @@ import ManageSkills from './pages/admin/ManageSkills';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminReports from './pages/admin/AdminReports';
 import AdminUserDetail from './pages/admin/AdminUserDetail';
+import AdminFeed from './pages/admin/AdminFeed';
 import Meeting from './pages/Meeting';
+import Feed from './pages/Feed';
+import FeedUserProfile from './pages/FeedUserProfile';
 
 function App() {
   return (
@@ -112,6 +115,16 @@ function App() {
             <Meeting />
           </ProtectedRoute>
         } />
+        <Route path="/feed" element={
+          <ProtectedRoute>
+            <Feed />
+          </ProtectedRoute>
+        } />
+        <Route path="/feed/user/:userId" element={
+          <ProtectedRoute>
+            <FeedUserProfile />
+          </ProtectedRoute>
+        } />
         <Route path="/admin/dashboard" element={
           <AdminRoute>
             <AdminDashboard />
@@ -135,6 +148,11 @@ function App() {
         <Route path="/admin/reports" element={
           <AdminRoute>
             <AdminReports />
+          </AdminRoute>
+        } />
+        <Route path="/admin/feed" element={
+          <AdminRoute>
+            <AdminFeed />
           </AdminRoute>
         } />
       </Routes>
