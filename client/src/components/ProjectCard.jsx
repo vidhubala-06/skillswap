@@ -2,12 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+function getThumbnailUrl(url) {
+  // Insert Cloudinary transformation params: 400px wide, auto quality/format
+  return url.replace('/upload/', '/upload/w_400,q_auto,f_auto/');
+}
+
 function ProjectCard({ project, showPoster = true }) {
     const navigate = useNavigate();
     const [showAllImages, setShowAllImages] = useState(false);
     const [showReport, setShowReport] = useState(false);
     const [reason, setReason] = useState('');
     const [reportMsg, setReportMsg] = useState('');
+    const [enlargedImage, setEnlargedImage] = useState(null);
 
     const handleReport = async (e) => {
       e.preventDefault();
@@ -41,7 +47,13 @@ function ProjectCard({ project, showPoster = true }) {
               <div className="mt-3">
                 <div className="grid grid-cols-2 gap-2">
                   {(showAllImages ? project.images : project.images.slice(0, 2)).map((url, i) => (
-                    <img key={i} src={url} alt="" className="rounded w-full h-32 object-cover" />
+                    <img
+                      key={i}
+                      src={getThumbnailUrl(url)}
+                      alt=""
+                      onClick={() => setEnlargedImage(url)}
+                      className="rounded w-full h-32 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    />
                   ))}
                 </div>
 
@@ -94,6 +106,26 @@ function ProjectCard({ project, showPoster = true }) {
                 </form>
               )}
             </div>
+
+            {enlargedImage && (
+              <div
+                onClick={() => setEnlargedImage(null)}
+                className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 cursor-pointer"
+              >
+                <img
+                  src={enlargedImage}
+                  alt=""
+                  className="max-w-full max-h-full rounded-lg object-contain"
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <button
+                  onClick={() => setEnlargedImage(null)}
+                  className="absolute top-4 right-4 text-white text-2xl w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
+                >
+                  ×
+                </button>
+              </div>
+            )}
         </div>
     );
 }

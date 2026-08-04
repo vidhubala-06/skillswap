@@ -3,7 +3,6 @@ const cloudinary = require('../../config/cloudinary');
 const {
   hasCompletedSwap, createProject, addProjectImage, addProjectTechnology,
   getFeedPage, getImagesForProjects, getTechnologiesForProjects,
-  getCachedFirstPage, setCachedFirstPage, invalidateFeedCache,
   getProjectsByUser, getUserKnownSkillBadges, reportProject
 } = require('./feed.queries');
 const pool = require('../../db/pool');
@@ -55,7 +54,6 @@ async function postProject(req, res) {
             await addProjectTechnology(projectId, skillId);
         }
 
-        await invalidateFeedCache();
         getIO().emit('feed:new-post');
 
         return res.status(201).json({ success: true, projectId });
@@ -68,19 +66,8 @@ async function postProject(req, res) {
 async function getFeed(req, res) {
   try {
     const { skillId, cursorCreatedAt, cursorId } = req.query;
-    const isFirstPageUnfiltered = !skillId && !cursorCreatedAt && !cursorId;
 
-    let projects;
-    let fromCache = false;
-
-    if (isFirstPageUnfiltered) {
-      const cached = await getCachedFirstPage();
-      if (cached) {
-        return res.status(200).json({ ...cached, fromCache: true });
-      }
-    }
-
-    projects = await getFeedPage({
+    const projects = await getFeedPage({
       skillId: skillId ? parseInt(skillId, 10) : null,
       cursorCreatedAt: cursorCreatedAt || null,
       cursorId: cursorId || null
@@ -96,13 +83,7 @@ async function getFeed(req, res) {
       technologies: technologies.filter(t => t.projectId === p.id).map(t => ({ id: t.skillId, name: t.skillName }))
     }));
 
-    const responseData = { projects: enriched };
-
-    if (isFirstPageUnfiltered) {
-      await setCachedFirstPage(responseData);
-    }
-
-    return res.status(200).json({ ...responseData, fromCache: false });
+    return res.status(200).json({ projects: enriched });
   } catch (err) {
     console.error('Get feed error:', err);
     return res.status(500).json({ error: 'Something went wrong' });

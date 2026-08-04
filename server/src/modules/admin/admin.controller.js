@@ -8,7 +8,7 @@ const {
 const { normalize } = require('../../utils/normalize');
 const { generateQuestionBankForSkill } = require('../quiz/quiz.service');
 const { getPendingReports, dismissReport, issueWarning, tempBanUser, permanentBanUser, getHandledReports } = require('../reports/reports.queries');
-const { invalidateFeedCache } = require('../feed/feed.queries');
+
 
 async function dashboard(req, res) {
   try {
@@ -193,7 +193,6 @@ async function listProjects(req, res) {
 async function deleteProject(req, res) {
   try {
     await deleteProjectAdmin(req.params.id);
-    await invalidateFeedCache();
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Delete project error:', err);

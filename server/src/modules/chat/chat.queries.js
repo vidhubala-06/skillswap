@@ -42,9 +42,12 @@ async function getConversationParticipants(conversationId) {
 }
 
 async function getSwapStatus(swapRequestId) {
-    if (!swapRequestId) return null;
-    const [rows] = await pool.query('SELECT status FROM swap_requests WHERE id = ?', [swapRequestId]);
-    return rows[0]?.status || null;
+  if (!swapRequestId) return null;
+  const [rows] = await pool.query(
+    'SELECT status, completed_at AS completedAt FROM swap_requests WHERE id = ?',
+    [swapRequestId]
+  );
+  return rows[0] || null;
 }
 
 async function getMessages(conversationId, beforeTimestamp = null) {

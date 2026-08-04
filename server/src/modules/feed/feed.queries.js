@@ -1,6 +1,5 @@
 const pool = require('../../db/pool');
 const { v4: uuidv4 } = require('uuid');
-const redis = require('../../config/redis');
 
 async function hasCompletedSwap(userId) {
     const [rows] = await pool.query(
@@ -110,35 +109,6 @@ async function getUserKnownSkillBadges(userId, limit = 3) {
     return rows.map(r => r.name);
 }
 
-const FEED_CACHE_KEY = 'feed:first-page';
-const FEED_CACHE_TTL_SECONDS = 30; // short TTL — new posts should show up reasonably quickly
-
-async function getCachedFirstPage() {
-  try {
-    const cached = await redis.get(FEED_CACHE_KEY);
-    return cached || null; // Upstash returns the parsed object directly, or null if missing
-  } catch (err) {
-    console.warn('Redis read failed, falling back to database:', err.message);
-    return null;
-  }
-}
-
-async function setCachedFirstPage(data) {
-  try {
-    await redis.set(FEED_CACHE_KEY, data, { ex: FEED_CACHE_TTL_SECONDS }); // pass the object directly, Upstash handles serialization
-  } catch (err) {
-    console.warn('Redis write failed, continuing without cache:', err.message);
-  }
-}
-
-async function invalidateFeedCache() {
-  try {
-    await redis.del(FEED_CACHE_KEY);
-  } catch (err) {
-    console.warn('Redis cache invalidation failed:', err.message);
-  }
-}
-
 async function reportProject({ projectId, reporterId, reason }) {
   await pool.query(
     'INSERT INTO project_reports (id, project_id, reporter_id, reason, status) VALUES (?, ?, ?, ?, ?)',
@@ -150,5 +120,5 @@ module.exports = {
   hasCompletedSwap, createProject, addProjectImage, addProjectTechnology, getImageCount,
   getFeedPage, getImagesForProjects, getTechnologiesForProjects,
   getProjectsByUser, getUserKnownSkillBadges,
-  getCachedFirstPage, setCachedFirstPage, invalidateFeedCache, reportProject
+  reportProject
 };

@@ -7,7 +7,19 @@ const {
 const fs = require('fs');
 const cloudinary = require('../../config/cloudinary');
 
-const SENDABLE_STATUSES = ['pending', 'accepted', 'in_progress'];
+const ACTIVE_STATUSES = ['pending', 'accepted', 'in_progress'];
+const CHAT_GRACE_PERIOD_DAYS = 30;
+
+function isChatSendable(swapStatus) {
+  if (!swapStatus) return false;
+  if (ACTIVE_STATUSES.includes(swapStatus.status)) return true;
+  if (swapStatus.status === 'completed' && swapStatus.completedAt) {
+    const completedDate = new Date(swapStatus.completedAt);
+    const graceEndDate = new Date(completedDate.getTime() + CHAT_GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000);
+    return new Date() < graceEndDate;
+  }
+  return false;
+}
 
 async function listInbox(req, res) {
     try {
@@ -34,7 +46,7 @@ async function loadMessages(req, res) {
 
         const messages = await getMessages(conversationId, before || null);
         const swapStatus = await getSwapStatus(participants.latestSwapRequestId);
-        const canSend = SENDABLE_STATUSES.includes(swapStatus);
+        const canSend = isChatSendable(swapStatus);
 
         return res.status(200).json({ messages, canSend });
     } catch (err) {
@@ -62,7 +74,7 @@ async function sendMessage(req, res) {
         }
 
         const swapStatus = await getSwapStatus(participants.latestSwapRequestId);
-        if (!SENDABLE_STATUSES.includes(swapStatus)) {
+        if (!isChatSendable(swapStatus)) {
             return res.status(403).json({ error: 'This conversation is closed' });
         }
 
@@ -115,7 +127,7 @@ async function uploadFile(req, res) {
         }
 
         const swapStatus = await getSwapStatus(participants.latestSwapRequestId);
-        if (!SENDABLE_STATUSES.includes(swapStatus)) {
+        if (!isChatSendable(swapStatus)) {
             fs.unlinkSync(req.file.path);
             return res.status(403).json({ error: 'This conversation is closed' });
         }
