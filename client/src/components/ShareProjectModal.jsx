@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import SkillSelector from './SkillSelector';
+import TechTagSelector from './TechTagSelector';
 
 function ShareProjectModal({ onClose, onSuccess }) {
     const [description, setDescription] = useState('');
@@ -74,13 +74,10 @@ function ShareProjectModal({ onClose, onSuccess }) {
                         />
                     </div>
 
-                    <SkillSelector
-                        label="Technologies Used"
+                    <TechTagSelector
                         selectedSkills={technologies}
                         onAdd={(skill) => setTechnologies([...technologies, skill])}
                         onRemove={(id) => setTechnologies(technologies.filter((s) => s.id !== id))}
-                        excludedIds={[]}
-                        variant="neutral"
                     />
 
                     <div>
