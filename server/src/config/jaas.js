@@ -1,12 +1,7 @@
-const fs = require('fs');
-const path = require('path');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const privateKey = fs.readFileSync(
-    path.join(__dirname, '../../', process.env.JAAS_PRIVATE_KEY_PATH),
-    'utf8'
-);
+const privateKey = process.env.JAAS_PRIVATE_KEY.replace(/\\n/g, '\n');
 
 function generateJaasToken({ roomName, userName }) {
     const payload = {
