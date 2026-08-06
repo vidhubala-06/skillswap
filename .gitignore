@@ -26,3 +26,7 @@ server/uploads/*
 !server/uploads/.gitkeep
 
 server/skillswap.pk
+
+server/ca.pem
+
+skillswap_export.sql
