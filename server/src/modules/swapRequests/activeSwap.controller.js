@@ -1,5 +1,6 @@
 const pool = require('../../db/pool');
 const { getSwapDetails, scheduleSession, markComplete, getCompletionFlags, completeSwapTx, getSessionHistory, getOrCreateMeetingRoom } = require('./activeSwap.queries');
+const { generateJaasToken } = require('../../config/jaas');
 const { getIO } = require('../../socket');
 
 async function loadSwap(req, res) {
@@ -119,7 +120,14 @@ async function getMeetingRoom(req, res) {
     }
 
     const roomId = await getOrCreateMeetingRoom(swapId);
-    return res.status(200).json({ roomId, partnerName: swap.partnerName });
+    const namespacedRoom = `${process.env.JAAS_APP_ID}/${roomId}`;
+
+    const [userRows] = await pool.query('SELECT name FROM profiles WHERE user_id = ?', [req.user.id]);
+    const userName = userRows[0]?.name || 'User';
+
+    const token = generateJaasToken({ roomName: namespacedRoom, userName });
+
+    return res.status(200).json({ roomId: namespacedRoom, token, partnerName: swap.partnerName });
   } catch (err) {
     console.error('Get meeting room error:', err);
     return res.status(500).json({ error: 'Something went wrong' });

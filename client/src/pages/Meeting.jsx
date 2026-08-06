@@ -11,6 +11,7 @@ function Meeting() {
     const apiRef = useRef(null);
 
     const [roomId, setRoomId] = useState(null);
+    const [token, setToken] = useState(null);
     const [partnerName, setPartnerName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ function Meeting() {
         try {
             const res = await axios.get(`http://localhost:5000/api/swap-requests/${id}/meeting-room`, { withCredentials: true });
             setRoomId(res.data.roomId);
+            setToken(res.data.token);
             setPartnerName(res.data.partnerName);
         } catch (err) {
             setError(err.response?.data?.error || 'Failed to load meeting room');
@@ -38,15 +40,16 @@ function Meeting() {
     }
 
     useEffect(() => {
-        if (!roomId) return;
+        if (!roomId || !token) return;
 
-        const scriptId = 'jitsi-external-api-script';
+        const scriptId = 'jaas-external-api-script';
         let script = document.getElementById(scriptId);
 
         function initJitsi() {
-            const domain = 'meet.jit.si';
+            const domain = '8x8.vc';
             const options = {
                 roomName: roomId,
+                jwt: token,
                 parentNode: jitsiContainerRef.current,
                 width: '100%',
                 height: '100%',
@@ -74,14 +77,14 @@ function Meeting() {
         } else if (!script) {
             script = document.createElement('script');
             script.id = scriptId;
-            script.src = 'https://meet.jit.si/external_api.js';
+            script.src = 'https://8x8.vc/libs/external_api.min.js';
             script.async = true;
             script.onload = initJitsi;
             document.body.appendChild(script);
         } else {
             script.onload = initJitsi;
         }
-    }, [roomId]);
+    }, [roomId, token]);
 
     if (loading) return <div className="p-8 text-gray-500">Loading meeting...</div>;
     if (error) return <div className="p-8 text-red-600">{error}</div>;

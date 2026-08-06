@@ -24,3 +24,5 @@ Thumbs.db
 # Local uploads
 server/uploads/*
 !server/uploads/.gitkeep
+
+server/skillswap.pk
