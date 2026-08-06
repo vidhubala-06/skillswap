@@ -20,7 +20,7 @@ function CooldownSelection() {
 
   async function loadTaughtSkill() {
     try {
-      const res = await axios.get(`http://localhost:5000/api/skill-cooldowns/${id}/taught-skill`, { withCredentials: true });
+      const res = await axios.get(`/api/skill-cooldowns/${id}/taught-skill`, { withCredentials: true });
       setSkillName(res.data.skillName);
       setSkillId(res.data.skillId);
     } catch (err) {
@@ -35,7 +35,7 @@ function CooldownSelection() {
     setSubmitting(true);
     try {
       await axios.post(
-        'http://localhost:5000/api/skill-cooldowns',
+        '/api/skill-cooldowns',
         { swapId: id, cooldownDays },
         { withCredentials: true }
       );

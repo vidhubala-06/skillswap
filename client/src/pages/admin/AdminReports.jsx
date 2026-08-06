@@ -18,7 +18,7 @@ function ActionModal({ type, report, onClose, onSuccess }) {
         setLoading(true);
         try {
             await axios.post(
-                `http://localhost:5000/api/admin/reports/${report.id}/${c.endpoint}`,
+                `/api/admin/reports/${report.id}/${c.endpoint}`,
                 c.body(input),
                 { withCredentials: true }
             );
@@ -77,23 +77,23 @@ function AdminReports() {
     }, []);
 
     async function loadReports() {
-      try {
-        const [pending, handled] = await Promise.all([
-          axios.get('http://localhost:5000/api/admin/reports', { withCredentials: true }),
-          axios.get('http://localhost:5000/api/admin/reports/handled', { withCredentials: true })
-        ]);
-        setReports(pending.data.reports);
-        setHandledReports(handled.data.reports);
-      } catch (err) {
-        console.error('Failed to load reports');
-      } finally {
-        setLoading(false);
-      }
+        try {
+            const [pending, handled] = await Promise.all([
+                axios.get('/api/admin/reports', { withCredentials: true }),
+                axios.get('/api/admin/reports/handled', { withCredentials: true })
+            ]);
+            setReports(pending.data.reports);
+            setHandledReports(handled.data.reports);
+        } catch (err) {
+            console.error('Failed to load reports');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleDismiss = async (id) => {
         try {
-            await axios.post(`http://localhost:5000/api/admin/reports/${id}/dismiss`, {}, { withCredentials: true });
+            await axios.post(`/api/admin/reports/${id}/dismiss`, {}, { withCredentials: true });
             setMessage('Report dismissed.');
             loadReports();
         } catch (err) {
@@ -105,7 +105,7 @@ function AdminReports() {
         if (!window.confirm(`Permanently ban ${report.reportedName}? This cannot be undone.`)) return;
         try {
             await axios.post(
-                `http://localhost:5000/api/admin/reports/${report.id}/permanent-ban`,
+                `/api/admin/reports/${report.id}/permanent-ban`,
                 { userId: report.reportedUserId },
                 { withCredentials: true }
             );
@@ -121,12 +121,12 @@ function AdminReports() {
             <h1 className="font-display text-2xl font-semibold text-ink mb-6">Reports ({reports.length})</h1>
 
             <div className="flex gap-1 mb-6 border-b border-[#E7E5DD]">
-              <button onClick={() => setTab('pending')} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'pending' ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'}`}>
-                Pending ({reports.length})
-              </button>
-              <button onClick={() => setTab('handled')} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'handled' ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'}`}>
-                Handled ({handledReports.length})
-              </button>
+                <button onClick={() => setTab('pending')} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'pending' ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'}`}>
+                    Pending ({reports.length})
+                </button>
+                <button onClick={() => setTab('handled')} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'handled' ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'}`}>
+                    Handled ({handledReports.length})
+                </button>
             </div>
 
             {message && <div className="bg-teal-bg text-teal-text p-3 rounded-lg mb-4 text-sm">{message}</div>}
@@ -137,37 +137,37 @@ function AdminReports() {
                 <>
                     {tab === 'pending' && (
                         reports.length === 0 ? <p className="text-[#9A9890] text-sm">No pending reports.</p> :
-                        <div className="space-y-3">
-                            {reports.map((r) => (
-                                <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4">
-                                  <p className="text-sm text-ink">
-                                    <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
-                                  </p>
-                                  <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
-                                  <div className="flex gap-2 mt-3">
-                                    <button onClick={() => handleDismiss(r.id)} className="text-xs bg-[#F1EFE8] text-[#5F5E5A] px-3 py-1.5 rounded-lg hover:bg-[#E7E5DD] transition-colors">Dismiss</button>
-                                    <button onClick={() => setModal({ type: 'warn', report: r })} className="text-xs bg-amber-bg text-amber-text px-3 py-1.5 rounded-lg hover:bg-amber-brand/20 transition-colors">Send warning</button>
-                                    <button onClick={() => setModal({ type: 'tempBan', report: r })} className="text-xs bg-[#FAECE7] text-[#712B13] px-3 py-1.5 rounded-lg hover:bg-[#F0997B]/30 transition-colors">Temporary ban</button>
-                                    <button onClick={() => handlePermanentBan(r)} className="text-xs bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors">Permanent ban</button>
-                                  </div>
-                                </div>
-                            ))}
-                        </div>
+                            <div className="space-y-3">
+                                {reports.map((r) => (
+                                    <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4">
+                                        <p className="text-sm text-ink">
+                                            <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
+                                        </p>
+                                        <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
+                                        <div className="flex gap-2 mt-3">
+                                            <button onClick={() => handleDismiss(r.id)} className="text-xs bg-[#F1EFE8] text-[#5F5E5A] px-3 py-1.5 rounded-lg hover:bg-[#E7E5DD] transition-colors">Dismiss</button>
+                                            <button onClick={() => setModal({ type: 'warn', report: r })} className="text-xs bg-amber-bg text-amber-text px-3 py-1.5 rounded-lg hover:bg-amber-brand/20 transition-colors">Send warning</button>
+                                            <button onClick={() => setModal({ type: 'tempBan', report: r })} className="text-xs bg-[#FAECE7] text-[#712B13] px-3 py-1.5 rounded-lg hover:bg-[#F0997B]/30 transition-colors">Temporary ban</button>
+                                            <button onClick={() => handlePermanentBan(r)} className="text-xs bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors">Permanent ban</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                     )}
 
                     {tab === 'handled' && (
-                      handledReports.length === 0 ? <p className="text-[#9A9890] text-sm">No handled reports yet.</p> :
-                      handledReports.map((r) => (
-                        <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4">
-                          <p className="text-sm text-ink">
-                            <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
-                          </p>
-                          <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
-                          <span className="inline-block mt-2 text-xs px-2.5 py-1 rounded-full bg-[#F1EFE8] text-[#6B6E76]">
-                            {r.status.replace('_', ' ')}
-                          </span>
-                        </div>
-                      ))
+                        handledReports.length === 0 ? <p className="text-[#9A9890] text-sm">No handled reports yet.</p> :
+                            handledReports.map((r) => (
+                                <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4">
+                                    <p className="text-sm text-ink">
+                                        <strong>{r.reporterName}</strong> reported <strong>{r.reportedName}</strong>
+                                    </p>
+                                    <p className="text-sm text-[#6B6E76] mt-1 italic">"{r.reason}"</p>
+                                    <span className="inline-block mt-2 text-xs px-2.5 py-1 rounded-full bg-[#F1EFE8] text-[#6B6E76]">
+                                        {r.status.replace('_', ' ')}
+                                    </span>
+                                </div>
+                            ))
                     )}
                 </>
             )}

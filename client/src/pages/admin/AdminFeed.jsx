@@ -15,8 +15,8 @@ function AdminFeed() {
   async function loadAll() {
     try {
       const [p, r] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/projects', { withCredentials: true }),
-        axios.get('http://localhost:5000/api/admin/projects/reports', { withCredentials: true })
+        axios.get('/api/admin/projects', { withCredentials: true }),
+        axios.get('/api/admin/projects/reports', { withCredentials: true })
       ]);
       setProjects(p.data.projects);
       setReports(r.data.reports);
@@ -30,7 +30,7 @@ function AdminFeed() {
   const handleDeleteProject = async (project) => {
     if (!window.confirm(`Delete this project by ${project.posterName}? This cannot be undone.`)) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/projects/${project.id}`, { withCredentials: true });
+      await axios.delete(`/api/admin/projects/${project.id}`, { withCredentials: true });
       setMessage('Project deleted.');
       loadAll();
     } catch (err) {
@@ -40,7 +40,7 @@ function AdminFeed() {
 
   const handleDismissReport = async (reportId) => {
     try {
-      await axios.post(`http://localhost:5000/api/admin/projects/reports/${reportId}/dismiss`, {}, { withCredentials: true });
+      await axios.post(`/api/admin/projects/reports/${reportId}/dismiss`, {}, { withCredentials: true });
       setMessage('Report dismissed.');
       loadAll();
     } catch (err) {

@@ -27,7 +27,7 @@ function MatchedProfile() {
 
   async function checkLockStatus() {
     try {
-      const res = await axios.get('http://localhost:5000/api/profile/dashboard-data', { withCredentials: true });
+      const res = await axios.get('/api/profile/dashboard-data', { withCredentials: true });
       setActiveSwap(res.data.activeSwap);
     } catch (err) {
       console.error('Failed to check lock status');
@@ -38,7 +38,7 @@ function MatchedProfile() {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.get(`http://localhost:5000/api/profile/${userId}/public`, { withCredentials: true });
+      const res = await axios.get(`/api/profile/${userId}/public`, { withCredentials: true });
       setData(res.data);
     } catch (err) {
       setError('Failed to load profile');

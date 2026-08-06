@@ -27,7 +27,7 @@ function QuizResult() {
     setError('');
     try {
       await axios.post(
-        'http://localhost:5000/api/profile/self-rating',
+        '/api/profile/self-rating',
         { skillId, rating },
         { withCredentials: true }
       );
@@ -133,13 +133,12 @@ function QuizResult() {
                         return (
                           <div
                             key={opt.id}
-                            className={`text-sm px-3 py-2 rounded-lg border ${
-                              isCorrect
+                            className={`text-sm px-3 py-2 rounded-lg border ${isCorrect
                                 ? 'bg-teal-bg border-teal-brand/30 text-teal-text font-medium'
                                 : wasSelected
-                                ? 'bg-[#FCEBEB] border-[#F7C1C1] text-[#791F1F]'
-                                : 'border-[#E7E5DD] text-[#9A9890]'
-                            }`}
+                                  ? 'bg-[#FCEBEB] border-[#F7C1C1] text-[#791F1F]'
+                                  : 'border-[#E7E5DD] text-[#9A9890]'
+                              }`}
                           >
                             {opt.text}
                             {isCorrect && ' ✓ Correct answer'}

@@ -11,7 +11,7 @@ function VerifyEmailPending() {
 
   const handleResend = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/resend-verification', { email });
+      await axios.post('/api/auth/resend-verification', { email });
       setMessage('Verification email resent!');
       setCooldown(60);
       const interval = setInterval(() => {

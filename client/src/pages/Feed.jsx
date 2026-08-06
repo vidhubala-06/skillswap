@@ -40,14 +40,14 @@ function Feed() {
 
   async function checkEligibility() {
     try {
-      const res = await axios.get('http://localhost:5000/api/feed/eligibility', { withCredentials: true });
+      const res = await axios.get('/api/feed/eligibility', { withCredentials: true });
       setEligible(res.data.eligible);
     } catch (err) { /* silent */ }
   }
 
   async function loadSkillList() {
     try {
-      const res = await axios.get('http://localhost:5000/api/skills/all', { withCredentials: true });
+      const res = await axios.get('/api/skills/all', { withCredentials: true });
       setSkills(res.data.skills);
     } catch (err) { /* silent */ }
   }
@@ -71,7 +71,7 @@ function Feed() {
         params.append('cursorId', last.id);
       }
 
-      const res = await axios.get(`http://localhost:5000/api/feed?${params.toString()}`, { withCredentials: true });
+      const res = await axios.get(`/api/feed?${params.toString()}`, { withCredentials: true });
       const newProjects = res.data.projects;
 
       setProjects(reset ? newProjects : [...currentList, ...newProjects]);
@@ -114,9 +114,8 @@ function Feed() {
           </div>
           <button
             onClick={() => eligible ? setShowModal(true) : alert('Complete at least one swap to share a project.')}
-            className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:scale-105 ${
-              eligible ? 'bg-teal-brand text-white hover:bg-teal-brand/90' : 'bg-[#F1EFE8] text-[#9A9890]'
-            }`}
+            className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:scale-105 ${eligible ? 'bg-teal-brand text-white hover:bg-teal-brand/90' : 'bg-[#F1EFE8] text-[#9A9890]'
+              }`}
           >
             {eligible && <span className="absolute -inset-0.5 rounded-lg bg-teal-brand/30 animate-ping"></span>}
             <span className="relative">+ Share project</span>
@@ -127,9 +126,8 @@ function Feed() {
         <div className="relative flex gap-2 mt-5 mb-6 overflow-x-auto pb-2 animate-fade-in-up" style={{ animationDelay: '100ms', opacity: 0 }}>
           <button
             onClick={() => handleFilterChange('')}
-            className={`flex-shrink-0 font-tag text-xs px-3.5 py-1.5 rounded-full border transition-all duration-300 ${
-              !selectedSkillId ? 'bg-ink text-white border-ink' : 'bg-white text-[#6B6E76] border-[#D8D6CC] hover:border-ink'
-            }`}
+            className={`flex-shrink-0 font-tag text-xs px-3.5 py-1.5 rounded-full border transition-all duration-300 ${!selectedSkillId ? 'bg-ink text-white border-ink' : 'bg-white text-[#6B6E76] border-[#D8D6CC] hover:border-ink'
+              }`}
           >
             All
           </button>
@@ -137,11 +135,10 @@ function Feed() {
             <button
               key={s.id}
               onClick={() => handleFilterChange(String(s.id))}
-              className={`flex-shrink-0 font-tag text-xs px-3.5 py-1.5 rounded-full border transition-all duration-300 ${
-                selectedSkillId === String(s.id)
+              className={`flex-shrink-0 font-tag text-xs px-3.5 py-1.5 rounded-full border transition-all duration-300 ${selectedSkillId === String(s.id)
                   ? 'bg-teal-brand text-white border-teal-brand'
                   : 'bg-white text-[#6B6E76] border-[#D8D6CC] hover:border-teal-brand/50'
-              }`}
+                }`}
             >
               {s.name}
             </button>

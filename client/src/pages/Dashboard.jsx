@@ -39,7 +39,7 @@ function Dashboard() {
 
   async function fetchDashboard() {
     try {
-      const res = await axios.get('http://localhost:5000/api/profile/dashboard-data', { withCredentials: true });
+      const res = await axios.get('/api/profile/dashboard-data', { withCredentials: true });
       setData(res.data);
     } catch (err) {
       console.error('Failed to load dashboard', err);
@@ -111,21 +111,21 @@ function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <StatCard
             delay={0}
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D9488" strokeWidth="2"><path d="M12 15l-3.5 2 1-4-3-2.6 4-.3L12 6l1.5 4.1 4 .3-3 2.6 1 4z"/><circle cx="12" cy="12" r="10"/></svg>}
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D9488" strokeWidth="2"><path d="M12 15l-3.5 2 1-4-3-2.6 4-.3L12 6l1.5 4.1 4 .3-3 2.6 1 4z" /><circle cx="12" cy="12" r="10" /></svg>}
             label="Known skills"
             value={data?.skills.verified || 0}
             sublabel={`${data?.skills.pendingQuiz || 0} pending quiz · ${data?.skills.cooldown || 0} in cooldown`}
           />
           <StatCard
             delay={80}
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>}
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>}
             label="Wanted skills"
             value={data?.wantedCount || 0}
             sublabel="Ready to match"
           />
           <StatCard
             delay={160}
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>}
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" /></svg>}
             label="Pending requests"
             value={data?.pendingRequestsCount || 0}
             sublabel="All caught up"

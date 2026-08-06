@@ -30,3 +30,7 @@ server/skillswap.pk
 server/ca.pem
 
 skillswap_export.sql
+
+# Client environment files
+client/.env
+client/.env.production

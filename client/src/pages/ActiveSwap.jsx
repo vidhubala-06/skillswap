@@ -58,7 +58,7 @@ function ActiveSwap() {
 
   async function loadSwap() {
     try {
-      const res = await axios.get(`http://localhost:5000/api/swap-requests/${id}`, { withCredentials: true });
+      const res = await axios.get(`/api/swap-requests/${id}`, { withCredentials: true });
       if (res.data.swap.status === 'completed') {
         navigate(`/cooldown-selection/${id}`, { replace: true });
         return;
@@ -74,7 +74,7 @@ function ActiveSwap() {
 
   async function loadHistory() {
     try {
-      const res = await axios.get(`http://localhost:5000/api/swap-requests/${id}/history`, { withCredentials: true });
+      const res = await axios.get(`/api/swap-requests/${id}/history`, { withCredentials: true });
       setSessionHistory(res.data.sessions);
     } catch (err) {
       console.error('Failed to load session history');
@@ -87,7 +87,7 @@ function ActiveSwap() {
     setSaving(true);
     try {
       await axios.post(
-        `http://localhost:5000/api/swap-requests/${id}/schedule`,
+        `/api/swap-requests/${id}/schedule`,
         { sessionDate, sessionTime },
         { withCredentials: true }
       );
@@ -105,7 +105,7 @@ function ActiveSwap() {
     setMarking(true);
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/swap-requests/${id}/mark-complete`,
+        `/api/swap-requests/${id}/mark-complete`,
         {},
         { withCredentials: true }
       );
@@ -124,7 +124,7 @@ function ActiveSwap() {
   const handleReport = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/reports', { swapId: id, reason: reportReason }, { withCredentials: true });
+      await axios.post('/api/reports', { swapId: id, reason: reportReason }, { withCredentials: true });
       setReportMessage('Report submitted.');
       setShowReport(false);
       setReportReason('');

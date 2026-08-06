@@ -25,7 +25,7 @@ function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds, va
 
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/skills/search?q=${encodeURIComponent(query)}`, {
+        const res = await axios.get(`/api/skills/search?q=${encodeURIComponent(query)}`, {
           withCredentials: true
         });
         // filter out skills already selected here OR selected in the other list
@@ -49,7 +49,7 @@ function SkillSelector({ label, selectedSkills, onAdd, onRemove, excludedIds, va
   const handleSuggest = async () => {
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/skills/suggest',
+        '/api/skills/suggest',
         { name: query },
         { withCredentials: true }
       );

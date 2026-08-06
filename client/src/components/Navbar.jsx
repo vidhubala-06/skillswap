@@ -36,7 +36,7 @@ function Navbar() {
     if (!user) return;
     const fetchCount = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/notifications/unread-count', { withCredentials: true });
+        const res = await axios.get('/api/notifications/unread-count', { withCredentials: true });
         setUnreadCount(res.data.count);
       } catch (err) { /* silent */ }
     };
@@ -49,7 +49,7 @@ function Navbar() {
     if (!user) return;
     const fetchChatCount = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/chat/unread-count', { withCredentials: true });
+        const res = await axios.get('/api/chat/unread-count', { withCredentials: true });
         setUnreadChatCount(res.data.count);
       } catch (err) { /* silent */ }
     };

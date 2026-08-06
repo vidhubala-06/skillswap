@@ -29,7 +29,7 @@ function ProfileSetup() {
     setLoading(true);
     try {
       await axios.post(
-        'http://localhost:5000/api/profile',
+        '/api/profile',
         {
           name,
           linkedinUrl,

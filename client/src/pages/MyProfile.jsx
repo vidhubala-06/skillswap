@@ -29,7 +29,7 @@ function MyProfile() {
 
   async function loadCooldowns() {
     try {
-      const res = await axios.get('http://localhost:5000/api/skill-cooldowns/mine', { withCredentials: true });
+      const res = await axios.get('/api/skill-cooldowns/mine', { withCredentials: true });
       setCooldowns(res.data.cooldowns);
     } catch (err) {
       console.error('Failed to load cooldowns');
@@ -43,7 +43,7 @@ function MyProfile() {
 
   async function loadProfile() {
     try {
-      const res = await axios.get('http://localhost:5000/api/profile', { withCredentials: true });
+      const res = await axios.get('/api/profile', { withCredentials: true });
       const { profile, knownSkills: known, wantedSkills: wanted } = res.data;
 
       setName(profile?.name || '');
@@ -74,7 +74,7 @@ function MyProfile() {
     setSaving(true);
     try {
       await axios.post(
-        'http://localhost:5000/api/profile',
+        '/api/profile',
         {
           name,
           linkedinUrl,
@@ -97,7 +97,7 @@ function MyProfile() {
     setCooldownMessage('');
     try {
       await axios.post(
-        `http://localhost:5000/api/skill-cooldowns/${skillId}/edit`,
+        `/api/skill-cooldowns/${skillId}/edit`,
         { cooldownDays: days },
         { withCredentials: true }
       );
@@ -132,9 +132,8 @@ function MyProfile() {
                 key={t.key}
                 type="button"
                 onClick={() => setActiveTab(t.key)}
-                className={`relative px-4 py-3.5 text-sm font-medium transition-colors ${
-                  activeTab === t.key ? 'text-teal-text' : 'text-[#9A9890] hover:text-ink'
-                }`}
+                className={`relative px-4 py-3.5 text-sm font-medium transition-colors ${activeTab === t.key ? 'text-teal-text' : 'text-[#9A9890] hover:text-ink'
+                  }`}
               >
                 {t.label}
                 {activeTab === t.key && (

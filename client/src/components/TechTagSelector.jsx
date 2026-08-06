@@ -17,7 +17,7 @@ function TechTagSelector({ selectedSkills, onAdd, onRemove }) {
 
         debounceRef.current = setTimeout(async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/skills/search?q=${encodeURIComponent(query)}`, {
+                const res = await axios.get(`/api/skills/search?q=${encodeURIComponent(query)}`, {
                     withCredentials: true
                 });
                 const filtered = res.data.skills.filter(

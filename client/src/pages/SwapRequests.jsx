@@ -18,7 +18,7 @@ function RejectModal({ requestId, onClose, onSuccess }) {
     setError('');
     try {
       await axios.post(
-        `http://localhost:5000/api/swap-requests/${requestId}/reject`,
+        `/api/swap-requests/${requestId}/reject`,
         { reason },
         { withCredentials: true }
       );
@@ -84,10 +84,10 @@ function SwapRequests() {
     setLoading(true);
     try {
       const [r, s, c, h] = await Promise.all([
-        axios.get('http://localhost:5000/api/swap-requests/received', { withCredentials: true }),
-        axios.get('http://localhost:5000/api/swap-requests/sent', { withCredentials: true }),
-        axios.get('http://localhost:5000/api/swap-requests/completed', { withCredentials: true }),
-        axios.get('http://localhost:5000/api/swap-requests/history', { withCredentials: true })
+        axios.get('/api/swap-requests/received', { withCredentials: true }),
+        axios.get('/api/swap-requests/sent', { withCredentials: true }),
+        axios.get('/api/swap-requests/completed', { withCredentials: true }),
+        axios.get('/api/swap-requests/history', { withCredentials: true })
       ]);
       setReceived(r.data.requests);
       setSent(s.data.requests);
@@ -103,7 +103,7 @@ function SwapRequests() {
   const handleAccept = async (id) => {
     setMessage('');
     try {
-      await axios.post(`http://localhost:5000/api/swap-requests/${id}/accept`, {}, { withCredentials: true });
+      await axios.post(`/api/swap-requests/${id}/accept`, {}, { withCredentials: true });
       navigate(`/active-swap/${id}`);
     } catch (err) {
       setMessage(err.response?.data?.error || 'Something went wrong');
@@ -113,7 +113,7 @@ function SwapRequests() {
   const handleCancel = async (id) => {
     setMessage('');
     try {
-      await axios.post(`http://localhost:5000/api/swap-requests/${id}/cancel`, {}, { withCredentials: true });
+      await axios.post(`/api/swap-requests/${id}/cancel`, {}, { withCredentials: true });
       setMessage('Request cancelled.');
       loadAll();
     } catch (err) {
@@ -161,9 +161,8 @@ function SwapRequests() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`relative px-4 py-2.5 text-sm font-medium transition-colors ${
-              tab === t.key ? 'text-teal-text' : 'text-[#9A9890] hover:text-ink'
-            }`}
+            className={`relative px-4 py-2.5 text-sm font-medium transition-colors ${tab === t.key ? 'text-teal-text' : 'text-[#9A9890] hover:text-ink'
+              }`}
           >
             {t.label}
             {tab === t.key && (
@@ -187,9 +186,8 @@ function SwapRequests() {
             ) : received.map((r, i) => (
               <div
                 key={r.id}
-                className={`border rounded-xl p-4 flex items-center justify-between mb-3 animate-fade-in-up ${
-                  r.status === 'cancelled' ? 'bg-[#F5F4EF] border-[#E7E5DD]' : 'bg-white border-[#E7E5DD] hover:shadow-md transition-shadow duration-300'
-                }`}
+                className={`border rounded-xl p-4 flex items-center justify-between mb-3 animate-fade-in-up ${r.status === 'cancelled' ? 'bg-[#F5F4EF] border-[#E7E5DD]' : 'bg-white border-[#E7E5DD] hover:shadow-md transition-shadow duration-300'
+                  }`}
                 style={{ animationDelay: `${i * 60}ms`, opacity: 0 }}
               >
                 <div>
@@ -236,10 +234,9 @@ function SwapRequests() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                      r.status === 'pending' ? 'bg-amber-bg text-amber-text' :
-                      r.status === 'rejected' ? 'bg-[#FCEBEB] text-[#791F1F]' : 'bg-[#E7E5DD] text-[#6B6E76]'
-                    }`}>{r.status}</span>
+                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${r.status === 'pending' ? 'bg-amber-bg text-amber-text' :
+                        r.status === 'rejected' ? 'bg-[#FCEBEB] text-[#791F1F]' : 'bg-[#E7E5DD] text-[#6B6E76]'
+                      }`}>{r.status}</span>
                     {r.status === 'pending' && (
                       <button onClick={() => handleCancel(r.id)} className="text-xs text-[#9A9890] hover:text-[#791F1F] underline">Cancel</button>
                     )}
@@ -284,9 +281,9 @@ function SwapRequests() {
                 {fullHistory.map((r, i) => {
                   const dotColor =
                     r.status === 'completed' ? 'bg-teal-brand' :
-                    r.status === 'pending' ? 'bg-amber-brand' :
-                    r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#B4B2A9]' :
-                    'bg-violet-brand';
+                      r.status === 'pending' ? 'bg-amber-brand' :
+                        r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#B4B2A9]' :
+                          'bg-violet-brand';
 
                   return (
                     <div
@@ -307,12 +304,11 @@ function SwapRequests() {
                             </p>
                             <p className="text-xs text-[#9A9890] mt-1">{r.createdAt?.split('T')[0]}</p>
                           </div>
-                          <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-medium flex-shrink-0 ml-4 ${
-                            r.status === 'completed' ? 'bg-teal-bg text-teal-text' :
-                            r.status === 'pending' ? 'bg-amber-bg text-amber-text' :
-                            r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#F1EFE8] text-[#6B6E76]' :
-                            'bg-violet-bg text-violet-text'
-                          }`}>
+                          <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-medium flex-shrink-0 ml-4 ${r.status === 'completed' ? 'bg-teal-bg text-teal-text' :
+                              r.status === 'pending' ? 'bg-amber-bg text-amber-text' :
+                                r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#F1EFE8] text-[#6B6E76]' :
+                                  'bg-violet-bg text-violet-text'
+                            }`}>
                             {r.status.replace('_', ' ')}
                           </span>
                         </div>

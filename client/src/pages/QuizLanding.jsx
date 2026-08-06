@@ -39,7 +39,7 @@ function QuizLanding() {
 
   async function fetchStatus() {
     try {
-      const res = await axios.get('http://localhost:5000/api/quiz/status', { withCredentials: true });
+      const res = await axios.get('/api/quiz/status', { withCredentials: true });
       setSkills(res.data.skills);
     } catch (err) {
       setError('Failed to load quiz status');
@@ -59,7 +59,7 @@ function QuizLanding() {
     setStarting(skillId);
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/quiz/start',
+        '/api/quiz/start',
         { skillId },
         { withCredentials: true }
       );
@@ -127,8 +127,8 @@ function QuizLanding() {
                     {starting === skill.skill_id
                       ? 'Starting...'
                       : skill.status === 'cooldown'
-                      ? 'Retry quiz'
-                      : 'Start quiz'}
+                        ? 'Retry quiz'
+                        : 'Start quiz'}
                   </button>
                 </div>
               ))}

@@ -59,7 +59,7 @@ function Chat() {
   useEffect(() => {
     if (conversationId) {
       loadMessages();
-      axios.post(`http://localhost:5000/api/chat/${conversationId}/read`, {}, { withCredentials: true }).catch(() => { });
+      axios.post(`/api/chat/${conversationId}/read`, {}, { withCredentials: true }).catch(() => { });
       const socket = socketRef.current;
       if (socket) {
         socket.emit('join-conversation', conversationId);
@@ -85,7 +85,7 @@ function Chat() {
     }
     const timeout = setTimeout(async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/chat/search?q=${encodeURIComponent(searchQuery)}`, { withCredentials: true });
+        const res = await axios.get(`/api/chat/search?q=${encodeURIComponent(searchQuery)}`, { withCredentials: true });
         setSearchResults(res.data.conversations);
       } catch (err) {
         console.error('Search failed');
@@ -102,7 +102,7 @@ function Chat() {
 
   async function loadInbox() {
     try {
-      const res = await axios.get('http://localhost:5000/api/chat/inbox', { withCredentials: true });
+      const res = await axios.get('/api/chat/inbox', { withCredentials: true });
       setInbox(res.data.conversations);
     } catch (err) {
       console.error('Failed to load inbox');
@@ -113,7 +113,7 @@ function Chat() {
 
   async function loadMessages() {
     try {
-      const res = await axios.get(`http://localhost:5000/api/chat/${conversationId}/messages`, { withCredentials: true });
+      const res = await axios.get(`/api/chat/${conversationId}/messages`, { withCredentials: true });
       setMessages(res.data.messages);
       setCanSend(res.data.canSend);
       setHasMore(res.data.messages.length === 50); // if we got a full page, there might be more
@@ -132,7 +132,7 @@ function Chat() {
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/chat/${conversationId}/messages?before=${encodeURIComponent(oldestTimestamp)}`,
+        `/api/chat/${conversationId}/messages?before=${encodeURIComponent(oldestTimestamp)}`,
         { withCredentials: true }
       );
       const older = res.data.messages;
@@ -167,7 +167,7 @@ function Chat() {
     if (!messageText.trim()) return;
     try {
       await axios.post(
-        `http://localhost:5000/api/chat/${conversationId}/messages`,
+        `/api/chat/${conversationId}/messages`,
         { message: messageText },
         { withCredentials: true }
       );
@@ -188,7 +188,7 @@ function Chat() {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/chat/${conversationId}/upload`,
+        `/api/chat/${conversationId}/upload`,
         formData,
         { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -205,7 +205,7 @@ function Chat() {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:5000/api/reports',
+        '/api/reports',
         { conversationId, reason: reportReason },
         { withCredentials: true }
       );
@@ -220,7 +220,7 @@ function Chat() {
   const handleHideConversation = async (e, convId) => {
     e.stopPropagation(); // don't trigger navigation when clicking the remove button
     try {
-      await axios.post(`http://localhost:5000/api/chat/${convId}/hide`, {}, { withCredentials: true });
+      await axios.post(`/api/chat/${convId}/hide`, {}, { withCredentials: true });
       loadInbox();
     } catch (err) {
       console.error('Failed to remove conversation');
@@ -435,7 +435,7 @@ function Chat() {
                       className="w-9 h-9 flex-shrink-0 flex items-center justify-center text-[#9A9890] hover:text-teal-text hover:bg-[#F1EFE8] rounded-full transition-colors disabled:opacity-50"
                       title="Attach a file"
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
                     </button>
                     <input
                       type="text"
@@ -449,7 +449,7 @@ function Chat() {
                       disabled={!messageText.trim()}
                       className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-teal-brand text-white rounded-full hover:bg-teal-brand/90 disabled:opacity-40 transition-colors"
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z" /></svg>
                     </button>
                   </form>
                 ) : (

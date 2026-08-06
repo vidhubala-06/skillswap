@@ -13,7 +13,7 @@ function SendRequestModal({ recipientId, wantedSkillId, wantedSkillName, onClose
 
   async function loadMySkills() {
     try {
-      const res = await axios.get('http://localhost:5000/api/profile', { withCredentials: true });
+      const res = await axios.get('/api/profile', { withCredentials: true });
       const verified = res.data.knownSkills.filter((s) => s.status === 'verified');
       setMyKnownSkills(verified);
       if (verified.length > 0) setOfferedSkillId(verified[0].id);
@@ -27,7 +27,7 @@ function SendRequestModal({ recipientId, wantedSkillId, wantedSkillName, onClose
     setLoading(true);
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/swap-requests',
+        '/api/swap-requests',
         { recipientId, offeredSkillId, wantedSkillId },
         { withCredentials: true }
       );

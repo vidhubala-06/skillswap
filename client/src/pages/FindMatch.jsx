@@ -21,7 +21,7 @@ function FindMatch() {
 
   async function loadWantedSkills() {
     try {
-      const res = await axios.get('http://localhost:5000/api/profile', { withCredentials: true });
+      const res = await axios.get('/api/profile', { withCredentials: true });
       setWantedSkills(res.data.wantedSkills);
       if (res.data.wantedSkills.length > 0) {
         setSelectedSkillId(res.data.wantedSkills[0].id);
@@ -33,7 +33,7 @@ function FindMatch() {
 
   async function checkLockStatus() {
     try {
-      const res = await axios.get('http://localhost:5000/api/profile/dashboard-data', { withCredentials: true });
+      const res = await axios.get('/api/profile/dashboard-data', { withCredentials: true });
       setActiveSwap(res.data.activeSwap);
     } catch (err) {
       console.error('Failed to check lock status');
@@ -49,7 +49,7 @@ function FindMatch() {
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/matches?wantedSkillId=${selectedSkillId}`,
+        `/api/matches?wantedSkillId=${selectedSkillId}`,
         { withCredentials: true }
       );
       setMatchType(res.data.matchType);
@@ -132,9 +132,8 @@ function FindMatch() {
 
         {!loading && matchType && matchType !== 'none' && (
           <div className="flex items-center gap-2 mb-4 animate-fade-in-up" style={{ opacity: 0 }}>
-            <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-              matchType === 'two-way' ? 'bg-teal-bg text-teal-text' : 'bg-violet-bg text-violet-text'
-            }`}>
+            <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${matchType === 'two-way' ? 'bg-teal-bg text-teal-text' : 'bg-violet-bg text-violet-text'
+              }`}>
               {matchType === 'two-way' ? 'Two-way match' : 'One-way match'}
             </span>
             <span className="text-xs text-[#9A9890]">{results.length} {results.length === 1 ? 'person' : 'people'}</span>

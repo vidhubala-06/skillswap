@@ -18,7 +18,7 @@ function VerifyEmail() {
       return;
     }
 
-    axios.post('http://localhost:5000/api/auth/verify-email', { token })
+    axios.post('/api/auth/verify-email', { token })
       .then((res) => {
         setStatus('success');
         setMessage(res.data.message);

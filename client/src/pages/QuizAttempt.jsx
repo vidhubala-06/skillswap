@@ -29,7 +29,7 @@ function QuizAttempt() {
 
     async function fetchSession() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/quiz/session/${sessionId}`, { withCredentials: true });
+        const res = await axios.get(`/api/quiz/session/${sessionId}`, { withCredentials: true });
         setQuestions(res.data.questions);
         setExpiresAt(res.data.expiresAt);
         setSkillName(res.data.skillName);
@@ -98,7 +98,7 @@ function QuizAttempt() {
     setError('');
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/quiz/submit',
+        '/api/quiz/submit',
         { sessionId, answers: finalAnswers },
         { withCredentials: true }
       );
@@ -152,11 +152,10 @@ function QuizAttempt() {
                 <button
                   key={opt.id}
                   onClick={() => setSelectedOption(opt.id)}
-                  className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${
-                    selectedOption === opt.id
+                  className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${selectedOption === opt.id
                       ? 'border-teal-brand bg-teal-bg text-teal-text'
                       : 'border-[#E7E5DD] hover:bg-[#F5F4EF] text-[#3D3D3A]'
-                  }`}
+                    }`}
                 >
                   {opt.text}
                 </button>

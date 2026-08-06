@@ -27,7 +27,7 @@ function Meeting() {
 
     async function loadRoom() {
         try {
-            const res = await axios.get(`http://localhost:5000/api/swap-requests/${id}/meeting-room`, { withCredentials: true });
+            const res = await axios.get(`/api/swap-requests/${id}/meeting-room`, { withCredentials: true });
             setRoomId(res.data.roomId);
             setToken(res.data.token);
             setPartnerName(res.data.partnerName);
