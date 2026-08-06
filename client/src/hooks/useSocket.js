@@ -5,7 +5,7 @@ export function useSocket() {
     const socketRef = useRef(null);
 
     useEffect(() => {
-        socketRef.current = io('', { withCredentials: true });
+        socketRef.current = io(import.meta.env.VITE_API_URL, { withCredentials: true });
         return () => {
             socketRef.current.disconnect();
         };
