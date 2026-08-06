@@ -152,12 +152,6 @@ async function login(req, res) {
       expiresAt: refreshExpiresAt
     });
 
-    console.log('COOKIE DEBUG:', {
-      NODE_ENV: process.env.NODE_ENV,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
-    });
-
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
