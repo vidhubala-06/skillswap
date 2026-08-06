@@ -8,6 +8,7 @@ const cron = require('node-cron');
 const { runReminderCheck } = require('./jobs/sessionReminders');
 const { runExpiryCheck } = require('./jobs/expirePendingRequests');
 const { runStaleSwapCheck } = require('./jobs/releaseStaleSwaps');
+const { runQuizSessionCleanup } = require('./jobs/cleanupQuizSessions');
 
 
 const app = express();
@@ -77,6 +78,11 @@ cron.schedule('0 0 * * *', () => {
 cron.schedule('0 1 * * *', () => {
   console.log('Running stale swap release check...');
   runStaleSwapCheck().catch((err) => console.error('Stale swap check failed:', err));
+});
+
+cron.schedule('0 2 * * *', () => {
+  console.log('Running quiz session cleanup...');
+  runQuizSessionCleanup().catch((err) => console.error('Quiz session cleanup failed:', err));
 });
 
 server.listen(PORT, () => {
