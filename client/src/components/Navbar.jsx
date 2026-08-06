@@ -62,9 +62,15 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-[#E7E5DD] px-6 py-3.5 flex items-center justify-between">
-      <Link to="/dashboard" className="font-display text-xl font-semibold text-ink tracking-tight">
-        SkillSwap
+    <nav
+      className="bg-white border-b border-[#E7E5DD] px-6 py-3.5 flex items-center justify-between"
+      style={{ animation: 'slideDown 0.5s ease-out forwards' }}
+    >
+      <Link to="/dashboard" className="flex items-center gap-2 group">
+        <span className="w-2 h-2 rounded-full bg-teal-brand animate-pulse"></span>
+        <span className="font-display text-xl font-semibold logo-gradient group-hover:scale-105 transition-transform inline-block">
+          SkillSwap
+        </span>
       </Link>
 
       {user && (
@@ -72,32 +78,36 @@ function Navbar() {
           <Link
             to="/dashboard"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm transition-colors ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            className={`text-sm transition-colors animate-fade-in-up ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            style={{ animationDelay: '60ms', opacity: 0 }}
           >
             Dashboard
           </Link>
           <Link
             to="/profile"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm transition-colors ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            className={`text-sm transition-colors animate-fade-in-up ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            style={{ animationDelay: '100ms', opacity: 0 }}
           >
             My Profile
           </Link>
           <Link
             to="/swap-requests"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm transition-colors ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            className={`text-sm transition-colors animate-fade-in-up ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            style={{ animationDelay: '140ms', opacity: 0 }}
           >
             Swap Requests
           </Link>
           <Link
             to="/chat"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm relative transition-colors ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            className={`text-sm relative transition-colors animate-fade-in-up ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            style={{ animationDelay: '180ms', opacity: 0 }}
           >
             Chat
             {unreadChatCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-amber-brand text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute -top-2 -right-3 bg-amber-brand text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center animate-bounce">
                 {unreadChatCount}
               </span>
             )}
@@ -105,11 +115,12 @@ function Navbar() {
           <Link
             to="/notifications"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm relative transition-colors ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            className={`text-sm relative transition-colors animate-fade-in-up ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            style={{ animationDelay: '220ms', opacity: 0 }}
           >
             Notifications
             {unreadCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-amber-brand text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute -top-2 -right-3 bg-amber-brand text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center animate-bounce">
                 {unreadCount}
               </span>
             )}
@@ -117,17 +128,21 @@ function Navbar() {
           <Link
             to="/feed"
             onClick={(e) => { if (locked) { e.preventDefault(); alert(lockMessage); } }}
-            className={`text-sm transition-colors ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            className={`text-sm transition-colors animate-fade-in-up ${locked ? 'text-gray-300 cursor-not-allowed' : 'text-[#6B6E76] hover:text-ink'}`}
+            style={{ animationDelay: '260ms', opacity: 0 }}
           >
             Feed
           </Link>
 
           <span className="w-px h-4 bg-[#E7E5DD]"></span>
 
-          <span className="text-sm text-[#9A9890]">{user.email}</span>
+          <span className="text-sm text-[#9A9890] animate-fade-in-up" style={{ animationDelay: '300ms', opacity: 0 }}>
+            {user.email}
+          </span>
           <button
             onClick={handleLogout}
-            className="text-sm bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors"
+            className="text-sm bg-[#FCEBEB] text-[#791F1F] px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] hover:scale-105 transition-all duration-300 animate-fade-in-up"
+            style={{ animationDelay: '340ms', opacity: 0 }}
           >
             Logout
           </button>

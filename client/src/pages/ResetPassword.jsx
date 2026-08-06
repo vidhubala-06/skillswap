@@ -39,7 +39,7 @@ function ResetPassword() {
 
   return (
     <AuthLayout>
-      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD]">
+      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] shadow-sm hover:shadow-md transition-shadow duration-300">
         <h1 className="font-display text-xl font-semibold text-ink mb-6">Set new password</h1>
 
         {error && (

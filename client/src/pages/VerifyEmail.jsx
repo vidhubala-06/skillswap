@@ -32,7 +32,7 @@ function VerifyEmail() {
 
   return (
     <AuthLayout>
-      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] text-center">
+      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] shadow-sm hover:shadow-md transition-shadow duration-300 text-center">
         {status === 'verifying' && <p className="text-[#6B6E76] text-sm">Verifying your email...</p>}
         {status === 'success' && (
           <>

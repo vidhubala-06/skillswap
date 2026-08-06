@@ -2,7 +2,8 @@ const { v4: uuidv4 } = require('uuid');
 const { getIO } = require('../../socket');
 const {
     getInbox, getConversationParticipants, getSwapStatus, getMessages, insertMessage,
-    getUnreadChatCount, markConversationRead
+    getUnreadChatCount, markConversationRead, hideForUser, unhideForUser, unhideForBoth,
+    searchConversations
 } = require('./chat.queries');
 const fs = require('fs');
 const cloudinary = require('../../config/cloudinary');
@@ -22,13 +23,17 @@ function isChatSendable(swapStatus) {
 }
 
 async function listInbox(req, res) {
-    try {
-        const conversations = await getInbox(req.user.id);
-        return res.status(200).json({ conversations });
-    } catch (err) {
-        console.error('List inbox error:', err);
-        return res.status(500).json({ error: 'Something went wrong' });
-    }
+  try {
+    const conversations = await getInbox(req.user.id);
+    const enriched = conversations.map((c) => ({
+      ...c,
+      canSend: isChatSendable({ status: c.swapStatus, completedAt: c.completedAt })
+    }));
+    return res.status(200).json({ conversations: enriched });
+  } catch (err) {
+    console.error('List inbox error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
 }
 
 async function loadMessages(req, res) {
@@ -43,6 +48,8 @@ async function loadMessages(req, res) {
         if (participants.userAId !== req.user.id && participants.userBId !== req.user.id) {
             return res.status(403).json({ error: 'You are not part of this conversation' });
         }
+
+        await unhideForUser(conversationId, req.user.id);
 
         const messages = await getMessages(conversationId, before || null);
         const swapStatus = await getSwapStatus(participants.latestSwapRequestId);
@@ -86,6 +93,8 @@ async function sendMessage(req, res) {
             messageType: 'text',
             message: message.trim()
         });
+
+        await unhideForBoth(conversationId);
 
         const payload = {
             id: messageId,
@@ -149,6 +158,8 @@ async function uploadFile(req, res) {
             attachmentSize: req.file.size
         });
 
+        await unhideForBoth(conversationId);
+
         const payload = {
             id: messageId,
             conversationId,
@@ -192,4 +203,44 @@ async function markRead(req, res) {
   }
 }
 
-module.exports = { listInbox, loadMessages, sendMessage, uploadFile, unreadCount, markRead };
+async function hideConversation(req, res) {
+  try {
+    const { conversationId } = req.params;
+    const participants = await getConversationParticipants(conversationId);
+    if (!participants) return res.status(404).json({ error: 'Conversation not found' });
+    if (participants.userAId !== req.user.id && participants.userBId !== req.user.id) {
+      return res.status(403).json({ error: 'You are not part of this conversation' });
+    }
+
+    const swapStatus = await getSwapStatus(participants.latestSwapRequestId);
+    if (isChatSendable(swapStatus)) {
+      return res.status(400).json({ error: 'You can only remove a conversation while it is closed' });
+    }
+
+    await hideForUser(conversationId, req.user.id);
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Hide conversation error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+async function search(req, res) {
+  try {
+    const query = req.query.q || '';
+    if (query.trim().length === 0) {
+      return res.status(200).json({ conversations: [] });
+    }
+    const results = await searchConversations(req.user.id, query.trim());
+    const enriched = results.map((c) => ({
+      ...c,
+      canSend: isChatSendable({ status: c.swapStatus, completedAt: c.completedAt })
+    }));
+    return res.status(200).json({ conversations: enriched });
+  } catch (err) {
+    console.error('Search conversations error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+module.exports = { listInbox, loadMessages, sendMessage, uploadFile, unreadCount, markRead, hideConversation, search };

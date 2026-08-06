@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { shuffleOptions } = require('../../utils/shuffle');
+const pool = require('../../db/pool');
 const {
   getKnownSkillsWithStatus,
   getKnownSkillStatus,
@@ -98,10 +99,21 @@ async function submitQuiz(req, res) {
       : session.questions_json;
 
     let score = 0;
+    const wrongQuestions = [];
+
     questionsData.questions.forEach((q, i) => {
       const userAnswer = answers.find((a) => a.questionIndex === i);
-      if (userAnswer && userAnswer.selectedOptionId === q.correctOptionId) {
+      const isCorrect = userAnswer && userAnswer.selectedOptionId === q.correctOptionId;
+
+      if (isCorrect) {
         score += 2;
+      } else {
+        wrongQuestions.push({
+          question: q.question,
+          options: q.options,
+          correctOptionId: q.correctOptionId,
+          yourAnswerId: userAnswer ? userAnswer.selectedOptionId : null
+        });
       }
     });
 
@@ -128,7 +140,8 @@ async function submitQuiz(req, res) {
       score,
       totalMarks,
       passed,
-      skillId: session.skill_id
+      skillId: session.skill_id,
+      wrongQuestions
     });
   } catch (err) {
     console.error('Submit quiz error:', err);
@@ -136,4 +149,42 @@ async function submitQuiz(req, res) {
   }
 }
 
-module.exports = { getStatus, startQuiz, submitQuiz };
+async function getSession(req, res) {
+  try {
+    const { sessionId } = req.params;
+    const session = await getQuizSession(sessionId, req.user.id);
+
+    if (!session) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+    if (session.status !== 'active') {
+      return res.status(400).json({ error: 'This quiz session is no longer active' });
+    }
+    if (new Date(session.expires_at) < new Date()) {
+      return res.status(400).json({ error: 'This quiz session has expired' });
+    }
+
+    const questionsData = typeof session.questions_json === 'string'
+      ? JSON.parse(session.questions_json)
+      : session.questions_json;
+
+    const strippedQuestions = questionsData.questions.map((q) => ({
+      question: q.question,
+      options: q.options
+    }));
+
+    const [skillRows] = await pool.query('SELECT name FROM skills WHERE id = ?', [session.skill_id]);
+
+    return res.status(200).json({
+      sessionId,
+      questions: strippedQuestions,
+      expiresAt: session.expires_at,
+      skillName: skillRows[0]?.name || ''
+    });
+  } catch (err) {
+    console.error('Get session error:', err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+}
+
+module.exports = { getStatus, startQuiz, submitQuiz, getSession };

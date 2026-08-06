@@ -29,11 +29,13 @@ import AdminFeed from './pages/admin/AdminFeed';
 import Meeting from './pages/Meeting';
 import Feed from './pages/Feed';
 import FeedUserProfile from './pages/FeedUserProfile';
+import Home from './pages/Home';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
@@ -65,7 +67,7 @@ function App() {
             <QuizLanding />
           </ProtectedRoute>
         } />
-        <Route path="/quiz-attempt" element={
+        <Route path="/quiz-attempt/:sessionId" element={
           <ProtectedRoute>
             <QuizAttempt />
           </ProtectedRoute>

@@ -24,7 +24,7 @@ function ForgotPassword() {
 
   return (
     <AuthLayout>
-      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD]">
+      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] shadow-sm hover:shadow-md transition-shadow duration-300">
         <h1 className="font-display text-xl font-semibold text-ink mb-1">Reset password</h1>
         <p className="text-sm text-[#6B6E76] mb-6">We'll email you a link to set a new one.</p>
 

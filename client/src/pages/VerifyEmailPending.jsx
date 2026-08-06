@@ -30,7 +30,7 @@ function VerifyEmailPending() {
 
   return (
     <AuthLayout>
-      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] text-center">
+      <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] shadow-sm hover:shadow-md transition-shadow duration-300 text-center">
         <h1 className="font-display text-xl font-semibold text-ink mb-2">Check your inbox</h1>
         <p className="text-sm text-[#6B6E76] mb-6">
           We've sent a verification link to <strong className="text-ink">{email}</strong>. Click it to activate your account.

@@ -135,21 +135,45 @@ function SwapRequests() {
         <p className="text-sm text-[#6B6E76] mt-1">Track requests you've sent, received, and completed.</p>
       </div>
 
-      <div className="flex gap-1 mb-6 border-b border-[#E7E5DD]">
+      {/* Stats strip */}
+      <div className="grid grid-cols-4 gap-3 mb-6">
+        {[
+          { label: 'Received', value: received.length, color: 'teal' },
+          { label: 'Sent', value: sent.length, color: 'violet' },
+          { label: 'Completed', value: completed.length, color: 'teal' },
+          { label: 'Total', value: fullHistory.length, color: 'violet' }
+        ].map((s, i) => (
+          <div
+            key={s.label}
+            className="bg-white border border-[#E7E5DD] rounded-xl p-3.5 text-center animate-fade-in-up"
+            style={{ animationDelay: `${i * 60}ms`, opacity: 0 }}
+          >
+            <p className={`font-display text-xl font-semibold ${s.color === 'teal' ? 'text-teal-text' : 'text-violet-text'}`}>
+              {s.value}
+            </p>
+            <p className="text-xs text-[#9A9890] mt-0.5">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative flex gap-1 mb-6 border-b border-[#E7E5DD]">
         {tabs.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-              tab === t.key ? 'border-teal-brand text-teal-text' : 'border-transparent text-[#9A9890] hover:text-ink'
+            className={`relative px-4 py-2.5 text-sm font-medium transition-colors ${
+              tab === t.key ? 'text-teal-text' : 'text-[#9A9890] hover:text-ink'
             }`}
           >
             {t.label}
+            {tab === t.key && (
+              <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-teal-brand rounded-full transition-all duration-300"></span>
+            )}
           </button>
         ))}
       </div>
 
-      {message && <div className="bg-teal-bg text-teal-text p-3 rounded-lg mb-4 text-sm">{message}</div>}
+      {message && <div className="bg-teal-bg text-teal-text p-3 rounded-lg mb-4 text-sm animate-fade-in-up" style={{ opacity: 0 }}>{message}</div>}
 
       {loading ? (
         <p className="text-gray-500">Loading...</p>
@@ -160,10 +184,14 @@ function SwapRequests() {
               <div className="bg-white border border-[#E7E5DD] rounded-xl p-8 text-center">
                 <p className="text-sm text-[#6B6E76]">No pending requests.</p>
               </div>
-            ) : received.map((r) => (
-              <div key={r.id} className={`border rounded-xl p-4 flex items-center justify-between mb-3 ${
-                r.status === 'cancelled' ? 'bg-[#F5F4EF] border-[#E7E5DD]' : 'bg-white border-[#E7E5DD]'
-              }`}>
+            ) : received.map((r, i) => (
+              <div
+                key={r.id}
+                className={`border rounded-xl p-4 flex items-center justify-between mb-3 animate-fade-in-up ${
+                  r.status === 'cancelled' ? 'bg-[#F5F4EF] border-[#E7E5DD]' : 'bg-white border-[#E7E5DD] hover:shadow-md transition-shadow duration-300'
+                }`}
+                style={{ animationDelay: `${i * 60}ms`, opacity: 0 }}
+              >
                 <div>
                   <p className={`font-medium ${r.status === 'cancelled' ? 'text-[#9A9890]' : 'text-ink'}`}>
                     {r.requesterName}
@@ -179,8 +207,8 @@ function SwapRequests() {
                 </div>
                 {r.status === 'pending' ? (
                   <div className="flex gap-2 flex-shrink-0 ml-4">
-                    <button onClick={() => handleAccept(r.id)} className="bg-teal-brand text-white text-sm px-3 py-1.5 rounded-lg hover:bg-teal-brand/90 transition-colors">Accept</button>
-                    <button onClick={() => setRejectingId(r.id)} className="bg-[#FCEBEB] text-[#791F1F] text-sm px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] transition-colors">Reject</button>
+                    <button onClick={() => handleAccept(r.id)} className="bg-teal-brand text-white text-sm px-3 py-1.5 rounded-lg hover:bg-teal-brand/90 hover:scale-105 transition-all duration-300">Accept</button>
+                    <button onClick={() => setRejectingId(r.id)} className="bg-[#FCEBEB] text-[#791F1F] text-sm px-3 py-1.5 rounded-lg hover:bg-[#F7C1C1] hover:scale-105 transition-all duration-300">Reject</button>
                   </div>
                 ) : (
                   <span className="text-xs bg-[#E7E5DD] text-[#6B6E76] px-2.5 py-1 rounded-full flex-shrink-0 ml-4">Cancelled</span>
@@ -194,8 +222,12 @@ function SwapRequests() {
               <div className="bg-white border border-[#E7E5DD] rounded-xl p-8 text-center">
                 <p className="text-sm text-[#6B6E76]">No sent requests.</p>
               </div>
-            ) : sent.map((r) => (
-              <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4 mb-3">
+            ) : sent.map((r, i) => (
+              <div
+                key={r.id}
+                className="bg-white border border-[#E7E5DD] rounded-xl p-4 mb-3 hover:shadow-md transition-shadow duration-300 animate-fade-in-up"
+                style={{ animationDelay: `${i * 60}ms`, opacity: 0 }}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-ink">{r.recipientName}</p>
@@ -225,8 +257,12 @@ function SwapRequests() {
               <div className="bg-white border border-[#E7E5DD] rounded-xl p-8 text-center">
                 <p className="text-sm text-[#6B6E76]">No completed swaps yet.</p>
               </div>
-            ) : completed.map((r) => (
-              <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4 mb-3">
+            ) : completed.map((r, i) => (
+              <div
+                key={r.id}
+                className="bg-white border border-[#E7E5DD] rounded-xl p-4 mb-3 hover:shadow-md transition-shadow duration-300 animate-fade-in-up"
+                style={{ animationDelay: `${i * 60}ms`, opacity: 0 }}
+              >
                 <p className="font-medium text-ink">{r.partnerName}</p>
                 <p className="text-sm text-[#6B6E76] mt-0.5">
                   Taught <span className="font-tag text-teal-text">{r.skillITaught}</span> · Learned <span className="font-tag text-violet-text">{r.skillILearned}</span>
@@ -240,32 +276,55 @@ function SwapRequests() {
               <div className="bg-white border border-[#E7E5DD] rounded-xl p-8 text-center">
                 <p className="text-sm text-[#6B6E76]">No swap history yet.</p>
               </div>
-            ) : fullHistory.map((r) => (
-              <div key={r.id} className="bg-white border border-[#E7E5DD] rounded-xl p-4 mb-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-ink">
-                      {r.direction === 'sent' ? 'To' : 'From'} {r.partnerName}
-                    </p>
-                    <p className="text-sm text-[#6B6E76] mt-0.5">
-                      Offered <span className="font-tag text-teal-text">{r.offeredSkillName}</span> · Wanted <span className="font-tag text-violet-text">{r.wantedSkillName}</span>
-                    </p>
-                    <p className="text-xs text-[#9A9890] mt-1">{r.createdAt?.split('T')[0]}</p>
-                  </div>
-                  <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-medium flex-shrink-0 ml-4 ${
-                    r.status === 'completed' ? 'bg-teal-bg text-teal-text' :
-                    r.status === 'pending' ? 'bg-amber-bg text-amber-text' :
-                    r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#FCEBEB] text-[#791F1F]' :
-                    'bg-violet-bg text-violet-text'
-                  }`}>
-                    {r.status.replace('_', ' ')}
-                  </span>
-                </div>
-                {r.rejectReason && (
-                  <p className="text-xs text-[#993C1D] mt-2 italic">Reason: {r.rejectReason}</p>
-                )}
+            ) : (
+              <div className="relative pl-6">
+                {/* vertical connecting line */}
+                <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[#E7E5DD]"></div>
+
+                {fullHistory.map((r, i) => {
+                  const dotColor =
+                    r.status === 'completed' ? 'bg-teal-brand' :
+                    r.status === 'pending' ? 'bg-amber-brand' :
+                    r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#B4B2A9]' :
+                    'bg-violet-brand';
+
+                  return (
+                    <div
+                      key={r.id}
+                      className="relative mb-4 animate-fade-in-up"
+                      style={{ animationDelay: `${i * 50}ms`, opacity: 0 }}
+                    >
+                      <span className={`absolute -left-6 top-4 w-3.5 h-3.5 rounded-full ring-4 ring-paper ${dotColor}`}></span>
+
+                      <div className="bg-white border border-[#E7E5DD] rounded-xl p-4 hover:shadow-md transition-shadow duration-300">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-ink">
+                              {r.direction === 'sent' ? 'To' : 'From'} {r.partnerName}
+                            </p>
+                            <p className="text-sm text-[#6B6E76] mt-0.5">
+                              Offered <span className="font-tag text-teal-text">{r.offeredSkillName}</span> · Wanted <span className="font-tag text-violet-text">{r.wantedSkillName}</span>
+                            </p>
+                            <p className="text-xs text-[#9A9890] mt-1">{r.createdAt?.split('T')[0]}</p>
+                          </div>
+                          <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-medium flex-shrink-0 ml-4 ${
+                            r.status === 'completed' ? 'bg-teal-bg text-teal-text' :
+                            r.status === 'pending' ? 'bg-amber-bg text-amber-text' :
+                            r.status === 'rejected' || r.status === 'cancelled' ? 'bg-[#F1EFE8] text-[#6B6E76]' :
+                            'bg-violet-bg text-violet-text'
+                          }`}>
+                            {r.status.replace('_', ' ')}
+                          </span>
+                        </div>
+                        {r.rejectReason && (
+                          <p className="text-xs text-[#993C1D] mt-2 italic">Reason: {r.rejectReason}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))
+            )
           )}
         </div>
       )}

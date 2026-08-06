@@ -1,4 +1,5 @@
 const pool = require('../../db/pool');
+const { v4: uuidv4 } = require('uuid');
 
 async function getSkillStatus(userId, skillId) {
   const [rows] = await pool.query(

@@ -45,7 +45,7 @@ function Login() {
 
   return (
 <AuthLayout>
-  <div className="bg-white p-8 rounded-xl border border-[#E7E5DD]">
+  <div className="bg-white p-8 rounded-xl border border-[#E7E5DD] shadow-sm hover:shadow-md transition-shadow duration-300">
     <h1 className="font-display text-2xl font-semibold text-ink mb-1">Welcome back</h1>
     <p className="text-sm text-[#6B6E76] mb-6">Log in to continue swapping skills.</p>
 
