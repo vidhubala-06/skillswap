@@ -33,4 +33,3 @@ skillswap_export.sql
 
 # Client environment files
 client/.env
-client/.env.production
